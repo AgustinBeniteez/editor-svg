@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Esquemas</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; display: flex; height: 100vh; }
+        #sidebar { width: 250px; background: #f4f4f4; padding: 10px; box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1); }
+        #canvas-container { flex-grow: 1; display: flex; align-items: center; justify-content: center; background: white; }
+        canvas { border: 1px solid black; }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h2>Controles</h2>
+        <label>Resolución: <input type="number" id="canvasWidth" value="1649"> x <input type="number" id="canvasHeight" value="929"> <button onclick="updateCanvasSize()">Aplicar</button></label>
+        <label>Nombre del Proyecto: <input type="text" id="projectName"></label>
+        <button onclick="addText()">Agregar Texto</button>
+        <button onclick="addRectangle()">Agregar Rectángulo</button>
+        <button onclick="addSquare()">Agregar Cuadrado</button>
+        <label>Tamaño Texto: <input type="number" id="textSize" value="20" onchange="updateTextSize()"></label>
+        <label>Fuente: <select id="fontFamily" onchange="changeFont()">
+            <option value="Arial">Arial</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Verdana">Verdana</option>
+        </select></label>
+        <label>Color Objeto: <input type="color" id="objectColor" onchange="changeObjectColor()"></label>
+        <label>Radio Borde: <input type="number" id="borderRadius" value="0" onchange="changeBorderRadius()"></label>
+        <label>Color Fondo: <input type="color" id="bgColor" onchange="changeBackgroundColor()"></label>
+        <button onclick="bringToFront()">Traer al Frente</button>
+        <button onclick="sendToBack()">Enviar al Fondo</button>
+        <button onclick="deleteObject()">Eliminar Elemento</button>
+        <button onclick="undo()">Deshacer (Ctrl+Z)</button>
+        <button onclick="redo()">Rehacer (Ctrl+Y)</button>
+        <button onclick="exportToSVG()">Exportar SVG</button>
+        <button onclick="exportToPNG()">Exportar PNG</button>
+    </div>
+    <div id="canvas-container">
+        <canvas id="canvas"></canvas>
+    </div>
+    
+    <script>
+        const canvas = new fabric.Canvas('canvas', { width: 1649, height: 929, backgroundColor: 'white' });
+        let state = [];
+        let index = -1;
+
+        function saveState() {
+            if (index < state.length - 1) {
+                state = state.slice(0, index + 1);
+            }
+            state.push(JSON.stringify(canvas));
+            index++;
+        }
+
+        function undo() {
+            if (index > 0) {
+                index--;
+                canvas.loadFromJSON(state[index], () => canvas.renderAll());
+            }
+        }
+
+        function redo() {
+            if (index < state.length - 1) {
+                index++;
+                canvas.loadFromJSON(state[index], () => canvas.renderAll());
+            }
+        }
+
+        canvas.on('object:modified', saveState);
+        canvas.on('object:added', saveState);
+        
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey && event.key === 'z') {
+                undo();
+            } else if (event.ctrlKey && event.key === 'y') {
+                redo();
+            }
+        });
+        function addText() {
+            const text = new fabric.Textbox('Texto', {
+                left: 100,
+                top: 100,
+                fontSize: parseInt(document.getElementById('textSize').value),
+                fill: document.getElementById('objectColor').value,
+                fontFamily: document.getElementById('fontFamily').value
+            });
+            canvas.add(text);
+            canvas.setActiveObject(text);
+        }
+
+        function addRectangle() {
+            const rect = new fabric.Rect({
+                left: 100,
+                top: 100,
+                width: 150,
+                height: 100,
+                fill: document.getElementById('objectColor').value,
+                rx: parseInt(document.getElementById('borderRadius').value),
+                ry: parseInt(document.getElementById('borderRadius').value)
+            });
+            canvas.add(rect);
+            canvas.setActiveObject(rect);
+        }
+
+        function addSquare() {
+            const square = new fabric.Rect({
+                left: 100,
+                top: 100,
+                width: 100,
+                height: 100,
+                fill: document.getElementById('objectColor').value,
+                rx: parseInt(document.getElementById('borderRadius').value),
+                ry: parseInt(document.getElementById('borderRadius').value)
+            });
+            canvas.add(square);
+            canvas.setActiveObject(square);
+        }
+
+        function changeObjectColor() {
+            const activeObj = canvas.getActiveObject();
+            if (activeObj) {
+                activeObj.set('fill', document.getElementById('objectColor').value);
+                canvas.renderAll();
+            }
+        }
+
+        function updateTextSize() {
+            const activeObj = canvas.getActiveObject();
+            if (activeObj && activeObj.type === 'textbox') {
+                activeObj.set('fontSize', parseInt(document.getElementById('textSize').value));
+                canvas.renderAll();
+            }
+        }
+
+        function changeFont() {
+            const activeObj = canvas.getActiveObject();
+            if (activeObj && activeObj.type === 'textbox') {
+                activeObj.set('fontFamily', document.getElementById('fontFamily').value);
+                canvas.renderAll();
+            }
+        }
+
+        function exportToSVG() {
+            const name = document.getElementById('projectName').value || 'esquema';
+            const link = document.createElement('a');
+            link.download = name + '.svg';
+            link.href = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(canvas.toSVG());
+            link.click();
+        }
+
+        function exportToPNG() {
+            const name = document.getElementById('projectName').value || 'esquema';
+            const link = document.createElement('a');
+            link.download = name + '.png';
+            link.href = canvas.toDataURL({ format: 'png', quality: 1.0 });
+            link.click();
+        }
+
+        function bringToFront() {
+            const activeObj = canvas.getActiveObject();
+            if (activeObj) {
+                canvas.bringToFront(activeObj);
+                canvas.renderAll();
+            }
+        }
+
+        function sendToBack() {
+            const activeObj = canvas.getActiveObject();
+            if (activeObj) {
+                canvas.sendToBack(activeObj);
+                canvas.renderAll();
+            }
+        }
+
+        function deleteObject() {
+            const activeObj = canvas.getActiveObject();
+            if (activeObj) {
+                canvas.remove(activeObj);
+                canvas.renderAll();
+            }
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Delete' || event.key === 'Backspace') {
+                deleteObject();
+            }
+        });
+
+        function updateCanvasSize() {
+            const width = parseInt(document.getElementById('canvasWidth').value);
+            const height = parseInt(document.getElementById('canvasHeight').value);
+            canvas.setWidth(width);
+            canvas.setHeight(height);
+            canvas.renderAll();
+        }
+    </script>
+</body>
+</html>
