@@ -314,17 +314,7 @@
             <i class="fa-solid fa-arrow-turn-up fa-rotate-270"></i>
             Deshacer (Ctrl+Z)
         </button>
-        <button onclick="redo()">
-            <i class="fa-solid fa-arrow-turn-up fa-rotate-90"></i>
-            Rehacer (Ctrl+Y)
-        </button>
         <div style="margin-top: auto; border-top: 1px solid #404040; padding-top: 12px;">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                <i class="fa-solid fa-file-word" style="color: #cccccc;"></i>
-                <label style="flex-direction: row; align-items: center; gap: 8px; margin: 0; flex: 1;">
-                    Nombre: <input type="text" id="projectName" style="flex: 1;">
-                </label>
-            </div>
             <div style="display: flex; gap: 8px;">
                 <button onclick="exportToSVG()" style="flex: 1;">
                     <i class="fa-regular fa-file-image"></i>
@@ -384,6 +374,29 @@
         </div>
     </div>
     
+    <div class="popup-overlay" id="exportPopup">
+        <div class="popup">
+            <p>
+                <i class="fa-solid fa-file-word" style="font-size: 2em; color: #4CAF50; margin-bottom: 15px;"></i><br>
+                Exportar Proyecto
+            </p>
+            <div style="margin-bottom: 15px;">
+                <label style="display: flex; flex-direction: column; gap: 8px;">
+                    <span>Nombre del archivo:</span>
+                    <input type="text" 
+                        id="projectName" 
+                        placeholder="esquema"
+                        style="width: 200px; background: #363636; border: 1px solid #505050; padding: 8px; border-radius: 4px; color: white;"
+                    >
+                </label>
+            </div>
+            <div class="popup-buttons">
+                <button onclick="confirmExport()" style="background: #4CAF50;">Exportar</button>
+                <button onclick="closeExportPopup()" style="background: #666666;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const canvas = new fabric.Canvas('canvas', { 
             width: 1649, 
@@ -430,9 +443,6 @@
             if (event.ctrlKey && event.key.toLowerCase() === 'z') {
                 event.preventDefault();
                 undo();
-            } else if (event.ctrlKey && event.key.toLowerCase() === 'y') {
-                event.preventDefault();
-                redo();
             }
         });
         function addText() {
@@ -612,19 +622,40 @@
         }
 
         function exportToSVG() {
-            const name = document.getElementById('projectName').value || 'esquema';
-            const link = document.createElement('a');
-            link.download = name + '.svg';
-            link.href = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(canvas.toSVG());
-            link.click();
+            showExportPopup('svg');
         }
 
         function exportToPNG() {
+            showExportPopup('png');
+        }
+
+        let currentExportType = null;
+
+        function showExportPopup(type) {
+            currentExportType = type;
+            document.getElementById('exportPopup').style.display = 'flex';
+            document.getElementById('projectName').focus();
+        }
+
+        function closeExportPopup() {
+            document.getElementById('exportPopup').style.display = 'none';
+            currentExportType = null;
+        }
+
+        function confirmExport() {
             const name = document.getElementById('projectName').value || 'esquema';
             const link = document.createElement('a');
-            link.download = name + '.png';
-            link.href = canvas.toDataURL({ format: 'png', quality: 1.0 });
+            
+            if (currentExportType === 'svg') {
+                link.download = name + '.svg';
+                link.href = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(canvas.toSVG());
+            } else {
+                link.download = name + '.png';
+                link.href = canvas.toDataURL({ format: 'png', quality: 1.0 });
+            }
+            
             link.click();
+            closeExportPopup();
         }
 
         function bringToFront() {
