@@ -18,8 +18,12 @@
         <label>Resolución: <input type="number" id="canvasWidth" value="1649"> x <input type="number" id="canvasHeight" value="929"> <button onclick="updateCanvasSize()">Aplicar</button></label>
         <label>Nombre del Proyecto: <input type="text" id="projectName"></label>
         <button onclick="addText()">Agregar Texto</button>
-        <button onclick="addRectangle()">Agregar Rectángulo</button>
+        <button onclick="addCircle()">Agregar Círculo</button>
         <button onclick="addSquare()">Agregar Cuadrado</button>
+        <div>
+            <label>Ancho: <input type="number" id="shapeWidth" value="150" onchange="updateShapeDimensions()"></label>
+            <label>Alto: <input type="number" id="shapeHeight" value="100" onchange="updateShapeDimensions()"></label>
+        </div>
         <label>Tamaño Texto: <input type="number" id="textSize" value="20" onchange="updateTextSize()"></label>
         <label>Fuente: <select id="fontFamily" onchange="changeFont()">
             <option value="Arial">Arial</option>
@@ -28,9 +32,11 @@
             <option value="Times New Roman">Times New Roman</option>
             <option value="Verdana">Verdana</option>
         </select></label>
-        <label>Color Objeto: <input type="color" id="objectColor" onchange="changeObjectColor()"></label>
+        <label>Color Relleno: <input type="color" id="objectColor" onchange="changeObjectColor()"></label>
+        <label>Color Borde: <input type="color" id="strokeColor" value="#000000" onchange="changeStrokeColor()"></label>
+        <label>Ancho Borde: <input type="number" id="strokeWidth" value="1" min="0" onchange="changeStrokeWidth()"></label>
         <label>Radio Borde: <input type="number" id="borderRadius" value="0" onchange="changeBorderRadius()"></label>
-        <label>Color Fondo: <input type="color" id="bgColor" onchange="changeBackgroundColor()"></label>
+        <label>Color Fondo Lienzo: <input type="color" id="canvasColor" value="#ffffff" onchange="changeCanvasColor()"></label>
         <button onclick="bringToFront()">Traer al Frente</button>
         <button onclick="sendToBack()">Enviar al Fondo</button>
         <button onclick="deleteObject()">Eliminar Elemento</button>
@@ -44,7 +50,11 @@
     </div>
     
     <script>
-        const canvas = new fabric.Canvas('canvas', { width: 1649, height: 929, backgroundColor: 'white' });
+        const canvas = new fabric.Canvas('canvas', { 
+            width: 1649, 
+            height: 929, 
+            backgroundColor: document.getElementById('canvasColor').value 
+        });
         let state = [];
         let index = -1;
 
@@ -92,27 +102,30 @@
             canvas.setActiveObject(text);
         }
 
-        function addRectangle() {
-            const rect = new fabric.Rect({
+        function addCircle() {
+            const width = parseInt(document.getElementById('shapeWidth').value);
+            const circle = new fabric.Circle({
                 left: 100,
                 top: 100,
-                width: 150,
-                height: 100,
+                radius: width / 2,
                 fill: document.getElementById('objectColor').value,
-                rx: parseInt(document.getElementById('borderRadius').value),
-                ry: parseInt(document.getElementById('borderRadius').value)
+                stroke: document.getElementById('strokeColor').value,
+                strokeWidth: parseInt(document.getElementById('strokeWidth').value)
             });
-            canvas.add(rect);
-            canvas.setActiveObject(rect);
+            canvas.add(circle);
+            canvas.setActiveObject(circle);
         }
 
         function addSquare() {
+            const width = parseInt(document.getElementById('shapeWidth').value);
             const square = new fabric.Rect({
                 left: 100,
                 top: 100,
-                width: 100,
-                height: 100,
+                width: width,
+                height: width,
                 fill: document.getElementById('objectColor').value,
+                stroke: document.getElementById('strokeColor').value,
+                strokeWidth: parseInt(document.getElementById('strokeWidth').value),
                 rx: parseInt(document.getElementById('borderRadius').value),
                 ry: parseInt(document.getElementById('borderRadius').value)
             });
@@ -196,6 +209,116 @@
             canvas.setWidth(width);
             canvas.setHeight(height);
             canvas.renderAll();
+        }
+
+        function updateShapeDimensions() {
+            const activeObj = canvas.getActiveObject();
+            if (!activeObj) return;
+
+            const width = parseInt(document.getElementById('shapeWidth').value);
+            const height = parseInt(document.getElementById('shapeHeight').value);
+
+            if (activeObj instanceof fabric.Circle) {
+                activeObj.set({
+                    radius: width / 2,
+                    stroke: document.getElementById('strokeColor').value,
+                    strokeWidth: parseInt(document.getElementById('strokeWidth').value)
+                });
+                document.getElementById('shapeHeight').value = width;
+            } else if (activeObj instanceof fabric.Rect) {
+                activeObj.set({
+                    width: width,
+                    height: height,
+                    stroke: document.getElementById('strokeColor').value,
+                    strokeWidth: parseInt(document.getElementById('strokeWidth').value),
+                    rx: parseInt(document.getElementById('borderRadius').value),
+                    ry: parseInt(document.getElementById('borderRadius').value)
+                });
+            }
+            canvas.renderAll();
+        }
+
+        canvas.on('object:scaling', function(e) {
+            const obj = e.target;
+            if (!obj) return;
+
+            if (obj instanceof fabric.Rect) {
+                document.getElementById('shapeWidth').value = Math.round(obj.width * obj.scaleX);
+                document.getElementById('shapeHeight').value = Math.round(obj.height * obj.scaleY);
+            } else if (obj instanceof fabric.Circle) {
+                const diameter = Math.round(obj.radius * 2 * obj.scaleX);
+                document.getElementById('shapeWidth').value = diameter;
+                document.getElementById('shapeHeight').value = diameter;
+            }
+
+            obj.set({
+                stroke: document.getElementById('strokeColor').value,
+                strokeWidth: parseInt(document.getElementById('strokeWidth').value),
+                rx: obj instanceof fabric.Rect ? parseInt(document.getElementById('borderRadius').value) : 0,
+                ry: obj instanceof fabric.Rect ? parseInt(document.getElementById('borderRadius').value) : 0
+            });
+        });
+
+        canvas.on('object:modified', function(e) {
+            const obj = e.target;
+            if (!obj) return;
+
+            if (obj instanceof fabric.Rect) {
+                const newWidth = Math.round(obj.width * obj.scaleX);
+                const newHeight = Math.round(obj.height * obj.scaleY);
+                document.getElementById('shapeWidth').value = newWidth;
+                document.getElementById('shapeHeight').value = newHeight;
+                
+                obj.set({
+                    width: newWidth,
+                    height: newHeight,
+                    scaleX: 1,
+                    scaleY: 1
+                });
+            } else if (obj instanceof fabric.Circle) {
+                const newRadius = Math.round(obj.radius * obj.scaleX);
+                document.getElementById('shapeWidth').value = newRadius * 2;
+                document.getElementById('shapeHeight').value = newRadius * 2;
+                
+                obj.set({
+                    radius: newRadius,
+                    scaleX: 1,
+                    scaleY: 1
+                });
+            }
+
+            obj.set({
+                stroke: document.getElementById('strokeColor').value,
+                strokeWidth: parseInt(document.getElementById('strokeWidth').value),
+                rx: obj instanceof fabric.Rect ? parseInt(document.getElementById('borderRadius').value) : 0,
+                ry: obj instanceof fabric.Rect ? parseInt(document.getElementById('borderRadius').value) : 0
+            });
+
+            canvas.renderAll();
+            saveState();
+        });
+
+        function changeStrokeColor() {
+            const activeObj = canvas.getActiveObject();
+            if (activeObj) {
+                activeObj.set('stroke', document.getElementById('strokeColor').value);
+                canvas.renderAll();
+            }
+        }
+
+        function changeStrokeWidth() {
+            const activeObj = canvas.getActiveObject();
+            if (activeObj) {
+                activeObj.set('strokeWidth', parseInt(document.getElementById('strokeWidth').value));
+                canvas.renderAll();
+            }
+        }
+
+        function changeCanvasColor() {
+            canvas.setBackgroundColor(
+                document.getElementById('canvasColor').value,
+                canvas.renderAll.bind(canvas)
+            );
         }
     </script>
 </body>
