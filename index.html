@@ -15,7 +15,7 @@
             color: #ffffff;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: center; 
             padding: 40px 20px;
         }
 
@@ -78,7 +78,7 @@
             font-size: 0.9em;
             line-height: 1.5;
         }
-
+        
         .popup-overlay {
             position: fixed;
             top: 0;
@@ -91,7 +91,7 @@
             justify-content: center;
             z-index: 1000;
         }
-
+        
         .popup {
             background: #2d2d2d;
             padding: 30px;
@@ -145,14 +145,14 @@
             border-radius: 4px;
             color: white;
         }
-
+        
         .popup-buttons {
             display: flex;
             gap: 10px;
             justify-content: center;
             margin-top: 30px;
         }
-
+        
         .popup-buttons button {
             padding: 10px 20px;
             border: none;
@@ -162,7 +162,7 @@
             color: white;
             font-size: 1em;
         }
-
+        
         .popup-buttons button:last-child {
             background: #666666;
         }
@@ -172,15 +172,15 @@
     <div class="logo-container">
         <img src="src/logo.webp" alt="Logo" class="logo">
         <h1>Editor Diagramas / Resúmenes</h1>
-    </div>
+            </div>
 
     <div class="options-container">
         <div class="option-card" onclick="showSizePopup('diagram')">
             <i class="fa-solid fa-diagram-project"></i>
             <h2>Diagrama</h2>
             <p>Crea diagramas, esquemas y flujos de trabajo con un lienzo personalizable. Ideal para representar procesos y estructuras. Exporta en SVG o PNG.</p>
-        </div>
-
+    </div>
+    
         <div class="option-card" onclick="showSizePopup('resume')">
             <i class="fa-solid fa-file-lines"></i>
             <h2>Resumen</h2>
@@ -206,7 +206,7 @@
             </div>
         </div>
     </div>
-
+    
     <script>
         let currentMode = '';
         const sizes = {
@@ -271,4 +271,4 @@
         }
     </script>
 </body>
-</html> 
+</html>
