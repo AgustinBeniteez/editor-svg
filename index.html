@@ -4,141 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/webp" href="src/logo.webp">
-    
-    <!-- HTML Meta Tags -->
-    <title>Editor de Esquemas / SVG | Free </title>
-    <meta name="description" content="Editor web para crear esquemas, diagramas y diseños. Herramienta gratuita que permite añadir formas, textos, imágenes, líneas y flechas con un diseño intuitivo y profesional.">
-
-    <!-- Facebook Meta Tags -->
-    <meta property="og:url" content="https://agustinbeniteez.github.io/editor-svg/">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Editor de Esquemas / SVG | Free ">
-    <meta property="og:description" content="Editor web para crear esquemas, diagramas y diseños. Herramienta gratuita que permite añadir formas, textos, imágenes, líneas y flechas con un diseño intuitivo y profesional.">
-    <meta property="og:image" content="https://opengraph.b-cdn.net/production/images/582203f7-a233-4780-bedb-e2e316614c8a.png?token=XRbr0EXiZwg7FrApztv-ESj7Y8y_z9Hyq5_IVOWd6HE&height=558&width=1200&expires=33275312768">
-
-    <!-- Twitter Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta property="twitter:domain" content="agustinbeniteez.github.io">
-    <meta property="twitter:url" content="https://agustinbeniteez.github.io/editor-svg/">
-    <meta name="twitter:title" content="Editor de Esquemas / SVG | Free ">
-    <meta name="twitter:description" content="Editor web para crear esquemas, diagramas y diseños. Herramienta gratuita que permite añadir formas, textos, imágenes, líneas y flechas con un diseño intuitivo y profesional.">
-    <meta name="twitter:image" content="https://opengraph.b-cdn.net/production/images/582203f7-a233-4780-bedb-e2e316614c8a.png?token=XRbr0EXiZwg7FrApztv-ESj7Y8y_z9Hyq5_IVOWd6HE&height=558&width=1200&expires=33275312768">
-
     <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css' rel='stylesheet'/>
-    <title>Editor de Esquemas</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+    <title>Editor de Esquemas / SVG | Free</title>
     <style>
         body { 
             font-family: Arial, sans-serif; 
             margin: 0; 
-            display: flex; 
-            height: 100vh;
+            min-height: 100vh;
             background: #1a1a1a;
             color: #ffffff;
-        }
-        #sidebar { 
-            width: 250px; 
-            background: #2d2d2d; 
-            padding: 20px; 
-            box-shadow: 2px 0px 15px rgba(0, 0, 0, 0.2);
-            border-radius: 0 15px 15px 0;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            align-items: center;
+            padding: 40px 20px;
         }
-        #canvas-container { 
-            flex-grow: 1; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            background: #1a1a1a; 
-            padding: 20px;
-            background-image: linear-gradient(45deg, #2d2d2d 25%, transparent 25%),
-                            linear-gradient(-45deg, #2d2d2d 25%, transparent 25%),
-                            linear-gradient(45deg, transparent 75%, #2d2d2d 75%),
-                            linear-gradient(-45deg, transparent 75%, #2d2d2d 75%);
-            background-size: 20px 20px;
-            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-        }
-        canvas { 
-            border: 0;
-            border-radius: 8px;
-        }
-        
-        #sidebar button {
-            background: #404040;
-            border: none;
-            padding: 8px;
-            color: white;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.2s;
-            min-width: 36px;
-            min-height: 36px;
+
+        .logo-container {
+            margin-bottom: 40px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
+            gap: 20px;
         }
-        
-        #sidebar button:hover {
-            background: #505050;
-        }
-        
-        #sidebar button i {
-            font-size: 1em;
-        }
-        
-        #sidebar input, #sidebar select {
-            background: #363636;
-            border: 1px solid #505050;
-            padding: 2px;
-            border-radius: 4px;
-            color: white;
-            margin-top: 4px;
-        }
-        
-        #sidebar label {
-            display: flex;
-            flex-direction: column;
-            font-size: 14px;
-            color: #cccccc;
-            margin-bottom: 4px;
-        }
-        
-        #sidebar label[style*="flex-direction: row"] input[type="color"] {
-            margin-left: auto;
-        }
-        
-        #sidebar h2 {
-            color: #ffffff;
-            margin-top: 0;
-            margin-bottom: 15px;
-            font-size: 1.5em;
-        }
-        
-        #sidebar input[type="color"] {
-            width: 50px;
-            height: 30px;
-            padding: 0;
+
+        .logo-container h1 {
+            font-size: 2em;
             margin: 0;
+            color: #ffffff;
         }
-        
-        #sidebar input[type="number"] {
-            width: 60px;
+
+        .logo {
+            height: 100px;
         }
-        
-        #sidebar input[type="text"], #sidebar select {
-            flex: 1;
-            min-width: 100px;
-        }
-        
-        .dimensions-container {
+
+        .options-container {
             display: flex;
-            gap: 10px;
-            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1200px;
         }
-        
+
+        .option-card {
+            background: #2d2d2d;
+            border-radius: 15px;
+            padding: 30px;
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .option-card:hover {
+            background: #363636;
+            transform: translateY(-5px);
+        }
+
+        .option-card i {
+            font-size: 3em;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+
+        .option-card h2 {
+            margin: 0;
+            color: #ffffff;
+        }
+
+        .option-card p {
+            margin: 0;
+            color: #cccccc;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
         .popup-overlay {
             position: fixed;
             top: 0;
@@ -151,1270 +91,184 @@
             justify-content: center;
             z-index: 1000;
         }
-        
-        #confirmPopup {
-            z-index: 1001; /* Para que siempre aparezca por encima de otros popups */
-        }
-        
+
         .popup {
             background: #2d2d2d;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .popup h3 {
+            margin: 0 0 20px 0;
             text-align: center;
         }
-        
+
+        .size-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .size-option {
+            background: #363636;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .size-option:hover {
+            background: #404040;
+        }
+
+        .size-option.selected {
+            background: #4CAF50;
+        }
+
+        .custom-size {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .custom-size input {
+            width: 80px;
+            padding: 8px;
+            background: #363636;
+            border: 1px solid #505050;
+            border-radius: 4px;
+            color: white;
+        }
+
         .popup-buttons {
             display: flex;
             gap: 10px;
             justify-content: center;
-            margin-top: 15px;
+            margin-top: 30px;
         }
-        
+
         .popup-buttons button {
-            min-width: 80px;
-            padding: 8px 16px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 6px;
+            border-radius: 4px;
             cursor: pointer;
-            transition: all 0.2s;
-            font-size: 14px;
-            color: white;
-        }
-        
-        .popup-buttons button:first-child {
             background: #4CAF50;
+            color: white;
+            font-size: 1em;
         }
-        
+
         .popup-buttons button:last-child {
-            background: #f44336;
-        }
-        
-        .popup-buttons button:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        
-        .popup-buttons button:active {
-            transform: translateY(1px);
-            box-shadow: none;
-        }
-        
-        .popup p {
-            color: #ffffff;
-            font-size: 16px;
-            margin: 0 0 15px 0;
-        }
-
-        .opacity-control {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 4px;
-        }
-
-        .opacity-control input[type="range"] {
-            flex: 1;
-            height: 6px;
-            -webkit-appearance: none;
-            background: #404040;
-            border-radius: 3px;
-        }
-
-        .opacity-control input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            background: #ffffff;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .opacity-control span {
-            min-width: 40px;
-            text-align: right;
+            background: #666666;
         }
     </style>
 </head>
 <body>
-    <div id="sidebar">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
-            <img src="src/logo.webp" alt="Logo" style="height: 62px;">
-            <button onclick="showResolutionPopup()" style="padding: 8px 16px;">
-                <i class="fa-solid fa-maximize"></i>
-                Redimensionar
-            </button>
+    <div class="logo-container">
+        <img src="src/logo.webp" alt="Logo" class="logo">
+        <h1>Editor Diagramas / Resúmenes</h1>
+    </div>
+
+    <div class="options-container">
+        <div class="option-card" onclick="showSizePopup('diagram')">
+            <i class="fa-solid fa-diagram-project"></i>
+            <h2>Diagrama</h2>
+            <p>Crea diagramas, esquemas y flujos de trabajo con un lienzo personalizable. Ideal para representar procesos y estructuras. Exporta en SVG o PNG.</p>
         </div>
-        <div style="display: flex; gap: 8px;">
-            <button onclick="addText()"><i class="fa-solid fa-font"></i></button>
-            <button onclick="addCircle()"><i class="fa-solid fa-circle"></i></button>
-            <button onclick="addSquare()"><i class="fa-solid fa-square"></i></button>
-            <button onclick="startDrawingLine()"><i class="fa-solid fa-minus"></i></button>
-            <button onclick="startDrawingArrow()"><i class="fa-solid fa-arrow-right"></i></button>
-            <button onclick="showImagePopup()"><i class="fa-solid fa-image"></i></button>
-        </div>
-        <label style="flex-direction: row; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-text-width"></i>
-            Tamaño Texto: <input type="number" id="textSize" value="20" onchange="updateTextSize()">
-        </label>
-        <label style="flex-direction: row; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-font"></i>
-            Fuente: <select id="fontFamily" onchange="changeFont()">
-                <option value="Arial">Arial</option>
-                <option value="Courier New">Courier New</option>
-                <option value="Georgia">Georgia</option>
-                <option value="Times New Roman">Times New Roman</option>
-                <option value="Verdana">Verdana</option>
-            </select>
-        </label>
 
-        <label style="flex-direction: row; align-items: center; gap: 8px;">
-            Ancho: <input type="number" id="shapeWidth" value="150">
-            Alto: <input type="number" id="shapeHeight" value="100">
-        </label>
-
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <i class="fa-solid fa-square"></i>
-                <span>Color Relleno:</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <input type="color" id="objectColor" onchange="changeObjectColor()" style="margin-left: 28px;">
-                <input type="text" 
-                    id="fillColorCode" 
-                    value="#000000" 
-                    style="color: #cccccc; width: 70px; background: #363636; border: 1px solid #505050; padding: 4px; border-radius: 4px;"
-                    onchange="updateColorFromCode(this, 'objectColor')"
-                    maxlength="7"
-                >
-            </div>
-            <div class="opacity-control" style="margin-left: 28px;">
-                <input type="range" id="fillOpacity" min="0" max="100" value="100" onchange="changeOpacity('fill')">
-                <span>100%</span>
-            </div>
-
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <i class="fa-regular fa-square"></i>
-                <span>Color Borde:</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <input type="color" id="strokeColor" value="#000000" onchange="changeStrokeColor()" style="margin-left: 28px;">
-                <input type="text" 
-                    id="strokeColorCode" 
-                    value="#000000" 
-                    style="color: #cccccc; width: 70px; background: #363636; border: 1px solid #505050; padding: 4px; border-radius: 4px;"
-                    onchange="updateColorFromCode(this, 'strokeColor')"
-                    maxlength="7"
-                >
-            </div>
-            <div class="opacity-control" style="margin-left: 28px;">
-                <input type="range" id="strokeOpacity" min="0" max="100" value="100" onchange="changeOpacity('stroke')">
-                <span>100%</span>
-            </div>
-
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <i class="fa-solid fa-mountain-sun"></i>
-                <span>Color Fondo:</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <input type="color" id="canvasColor" value="#ffffff" onchange="changeCanvasColor()" style="margin-left: 28px;">
-                <input type="text" 
-                    id="canvasColorCode" 
-                    value="#ffffff" 
-                    style="color: #cccccc; width: 70px; background: #363636; border: 1px solid #505050; padding: 4px; border-radius: 4px;"
-                    onchange="updateColorFromCode(this, 'canvasColor')"
-                    maxlength="7"
-                >
-            </div>
-        </div>
-        <label style="flex-direction: row; align-items: center; gap: 8px;">
-            <i class="fa-regular fa-square"></i>
-            Ancho Borde: <input type="number" id="strokeWidth" value="0" min="0" onchange="changeStrokeWidth()"> px
-        </label>
-        <label style="flex-direction: row; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-border-top-left"></i>
-            Radio Borde: <input type="number" id="borderRadius" value="0" onchange="changeBorderRadius()">px
-        </label>
-        <div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px;">
-            <div style="display: flex; gap: 8px;">
-                <button onclick="bringToFront()" style="padding: 8px; min-width: 36px;"><i class="fa-solid fa-arrow-up"></i></button>
-                <button onclick="sendToBack()" style="padding: 8px; min-width: 36px;"><i class="fa-solid fa-arrow-down"></i></button>
-                <button onclick="deleteObject()" style="padding: 8px; min-width: 36px;"><i class="fa-solid fa-trash"></i></button>
-            </div>
-            <button onclick="showLayers()">
-                <i class="fa-solid fa-layer-group"></i>
-                Capas
-            </button>
-            <button onclick="undo()">
-                <i class="fa-solid fa-arrow-turn-up fa-rotate-270"></i>
-                Deshacer (Ctrl+Z)
-            </button>
-            <div style="border-top: 1px solid #404040; padding-top: 12px;">
-                <div style="display: flex; gap: 8px;">
-                    <button onclick="exportToSVG()" style="flex: 1;">
-                        <i class="fa-regular fa-file-image"></i>
-                        Exportar SVG
-                    </button>
-                    <button onclick="exportToPNG()" style="flex: 1;">
-                        <i class="fa-solid fa-file-image"></i>
-                        Exportar PNG
-                    </button>
-                </div>
-            </div>
+        <div class="option-card" onclick="showSizePopup('resume')">
+            <i class="fa-solid fa-file-lines"></i>
+            <h2>Resumen</h2>
+            <p>Diseña resúmenes y documentos en formatos estándar como A4, carta o legal. Perfecto para documentación y presentaciones. Exporta en PDF o PNG.</p>
         </div>
     </div>
-    <div id="canvas-container">
-        <canvas id="canvas"></canvas>
-    </div>
-    
-    <div class="popup-overlay" id="confirmPopup">
+
+    <div class="popup-overlay" id="sizePopup">
         <div class="popup">
-            <p id="popupMessage"></p>
-            <div class="popup-buttons">
-                <button onclick="confirmChange(true)">Guardar</button>
-                <button onclick="confirmChange(false)">Cancelar</button>
+            <h3 id="popupTitle">Selecciona el tamaño</h3>
+            <div class="size-options" id="sizeOptions">
+                <!-- Se llenará dinámicamente -->
             </div>
-        </div>
-    </div>
-
-    <div class="popup-overlay" id="resolutionPopup">
-        <div class="popup">
-            <p>Cambiar Resolución</p>
-            <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;">
-                <input type="number" id="canvasWidth" value="1589" style="width: 80px;">
-                <span style="color: white; align-self: center;">x</span>
-                <input type="number" id="canvasHeight" value="889" style="width: 80px;">
+            <div class="custom-size">
+                <input type="number" id="customWidth" placeholder="Ancho">
+                <span>x</span>
+                <input type="number" id="customHeight" placeholder="Alto">
+                <span>px</span>
             </div>
             <div class="popup-buttons">
-                <button onclick="applyResolution()">Aplicar</button>
-                <button onclick="closeResolutionPopup()">Cancelar</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="popup-overlay" id="layersPopup">
-        <div class="popup">
-            <p>Capas</p>
-            <div id="layersList" style="
-                max-height: 300px;
-                overflow-y: auto;
-                margin: 10px 0;
-                text-align: left;
-                background: #363636;
-                border-radius: 4px;
-                padding: 8px;
-            "></div>
-            <div class="popup-buttons">
-                <button onclick="closeLayers()">Cerrar</button>
-            </div>
-        </div>
-    </div>
-    
-    <div class="popup-overlay" id="exportPopup">
-        <div class="popup">
-            <p>
-                <i class="fa-solid fa-file-word" style="font-size: 2em; color: #4CAF50; margin-bottom: 15px;"></i><br>
-                Exportar Proyecto
-            </p>
-            <div style="margin-bottom: 15px;">
-                <label style="display: flex; flex-direction: column; gap: 8px;">
-                    <span>Nombre del archivo:</span>
-                    <input type="text" 
-                        id="projectName" 
-                        placeholder="esquema"
-                        style="width: 200px; background: #363636; border: 1px solid #505050; padding: 8px; border-radius: 4px; color: white;"
-                    >
-                </label>
-            </div>
-            <div class="popup-buttons">
-                <button onclick="confirmExport()" style="background: #4CAF50;">Exportar</button>
-                <button onclick="closeExportPopup()" style="background: #666666;">Cancelar</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="popup-overlay" id="imagePopup">
-        <div class="popup">
-            <p>
-                <i class="fa-solid fa-image" style="font-size: 2em; color: #4CAF50; margin-bottom: 15px;"></i><br>
-                Insertar Imagen
-            </p>
-            <div style="margin-bottom: 15px;">
-                <input type="file" 
-                    id="imageInput" 
-                    accept="image/*"
-                    style="display: none;"
-                    onchange="handleImageUpload(this)"
-                >
-                <button onclick="document.getElementById('imageInput').click()" 
-                    style="background: #363636; border: 2px dashed #505050; padding: 20px; border-radius: 4px; width: 100%; cursor: pointer;">
-                    <i class="fa-solid fa-upload" style="margin-right: 8px;"></i>
-                    Seleccionar Imagen
-                </button>
-            </div>
-            <div class="popup-buttons">
-                <button onclick="closeImagePopup()" style="background: #666666;">Cancelar</button>
+                <button onclick="startEditor()">Comenzar</button>
+                <button onclick="closePopup()">Cancelar</button>
             </div>
         </div>
     </div>
 
     <script>
-        const canvas = new fabric.Canvas('canvas', { 
-            width: 1589, 
-            height: 889, 
-            backgroundColor: document.getElementById('canvasColor').value 
-        });
-        let state = [];
-        let index = -1;
-        let pendingChange = null;
-        let isDrawingLine = false;
-        let isDrawingArrow = false;
-        let startPoint = null;
+        let currentMode = '';
+        const sizes = {
+            diagram: [
+                { name: 'Por defecto', width: 1579, height: 869 },
+                { name: 'Panorámico', width: 1920, height: 1080 },
+                { name: 'Cuadrado', width: 1000, height: 1000 }
+            ],
+            resume: [
+                { name: 'A4', width: 794, height: 1123 },
+                { name: 'Carta', width: 816, height: 1056 },
+                { name: 'Legal', width: 816, height: 1344 }
+            ]
+        };
 
-        function saveState() {
-            if (index < state.length - 1) {
-                state = state.slice(0, index + 1);
-            }
-            state.push(JSON.stringify(canvas));
-            index++;
-        }
-
-        function undo() {
-            if (index > 0) {
-                index--;
-                canvas.loadFromJSON(state[index], function() {
-                    canvas.renderAll();
-                });
-            }
-        }
-
-        function redo() {
-            if (index < state.length - 1) {
-                index++;
-                canvas.loadFromJSON(state[index], function() {
-                    canvas.renderAll();
-                });
-            }
-        }
-
-        saveState();
-
-        canvas.on('object:modified', saveState);
-        canvas.on('object:added', saveState);
-        canvas.on('object:removed', saveState);
-        
-        document.addEventListener('keydown', function(event) {
-            if (event.ctrlKey && event.key.toLowerCase() === 'z') {
-                event.preventDefault();
-                undo();
-            }
-        });
-        function addText() {
-            const text = new fabric.Textbox('Texto', {
-                left: 100,
-                top: 100,
-                fontSize: parseInt(document.getElementById('textSize').value),
-                fill: document.getElementById('objectColor').value,
-                fontFamily: document.getElementById('fontFamily').value,
-                strokeWidth: 0,
-                scaleX: 1,
-                scaleY: 1,
-                lockUniScaling: true,
-                lockScalingX: true,
-                lockScalingY: true,
-                opacity: parseInt(document.getElementById('fillOpacity').value) / 100,
-                strokeOpacity: parseInt(document.getElementById('strokeOpacity').value) / 100
-            });
-            canvas.add(text);
-            canvas.setActiveObject(text);
-        }
-
-        function addCircle() {
-            const width = parseInt(document.getElementById('shapeWidth').value);
-            const circle = new fabric.Circle({
-                left: 100,
-                top: 100,
-                radius: width / 2,
-                fill: document.getElementById('objectColor').value,
-                stroke: document.getElementById('strokeColor').value,
-                strokeWidth: 0,
-                opacity: parseInt(document.getElementById('fillOpacity').value) / 100,
-                strokeOpacity: parseInt(document.getElementById('strokeOpacity').value) / 100
-            });
-            canvas.add(circle);
-            canvas.setActiveObject(circle);
-        }
-
-        function addSquare() {
-            const width = parseInt(document.getElementById('shapeWidth').value);
-            const square = new fabric.Rect({
-                left: 100,
-                top: 100,
-                width: width,
-                height: width,
-                fill: document.getElementById('objectColor').value,
-                stroke: document.getElementById('strokeColor').value,
-                strokeWidth: 0,
-                rx: parseInt(document.getElementById('borderRadius').value),
-                ry: parseInt(document.getElementById('borderRadius').value),
-                opacity: parseInt(document.getElementById('fillOpacity').value) / 100,
-                strokeOpacity: parseInt(document.getElementById('strokeOpacity').value) / 100
-            });
-            canvas.add(square);
-            canvas.setActiveObject(square);
-        }
-
-        function showConfirmPopup(message, changeCallback, type = 'change', color = null) {
-            const popup = document.getElementById('confirmPopup');
-            const messageEl = document.getElementById('popupMessage');
-            const buttonsContainer = popup.querySelector('.popup-buttons');
+        function showSizePopup(mode) {
+            currentMode = mode;
+            const popup = document.getElementById('sizePopup');
+            const title = document.getElementById('popupTitle');
+            const options = document.getElementById('sizeOptions');
             
-            let icon = '<i class="fa-solid fa-pen-to-square" style="font-size: 2em; color: #4CAF50; margin-bottom: 15px;"></i>';
-            let preview = '';
+            title.textContent = mode === 'diagram' ? 'Selecciona el tamaño del diagrama' : 'Selecciona el formato';
             
-            // Seleccionar el ícono según el tipo de cambio
-            switch(type) {
-                case 'color':
-                    preview = `<div style="
-                        width: 30px;
-                        height: 30px;
-                        border-radius: 50%;
-                        background-color: ${color};
-                        margin: 10px auto;
-                        border: 2px solid #ffffff;
-                    "></div>`;
-                    break;
-                case 'border-radius':
-                    icon = '<i class="fa-solid fa-border-top-left" style="font-size: 2em; color: #4CAF50; margin-bottom: 15px;"></i>';
-                    break;
-                case 'border-width':
-                    icon = '<i class="fa-regular fa-square" style="font-size: 2em; color: #4CAF50; margin-bottom: 15px;"></i>';
-                    break;
-                case 'font':
-                    icon = '<i class="fa-solid fa-font" style="font-size: 2em; color: #4CAF50; margin-bottom: 15px;"></i>';
-                    break;
-                case 'font-size':
-                    icon = '<i class="fa-solid fa-text-width" style="font-size: 2em; color: #4CAF50; margin-bottom: 15px;"></i>';
-                    break;
-            }
-            
-            messageEl.innerHTML = `
-                ${icon}<br>
-                ${preview}
-                ${message}
-            `;
-            
-            // Restaurar estilos por defecto de los botones
-            const buttons = buttonsContainer.querySelectorAll('button');
-            buttons[0].textContent = 'Guardar';
-            buttons[0].style.background = '#4CAF50';
-            buttons[1].style.background = '#666666';
+            options.innerHTML = sizes[mode].map(size => `
+                <div class="size-option" onclick="selectSize(${size.width}, ${size.height}, this)">
+                    ${size.name}<br>
+                    <small>${size.width} x ${size.height}</small>
+                </div>
+            `).join('');
             
             popup.style.display = 'flex';
-            pendingChange = changeCallback;
-        }
-        
-        function confirmChange(confirmed) {
-            document.getElementById('confirmPopup').style.display = 'none';
-            if (confirmed && pendingChange) {
-                pendingChange();
-            }
-            pendingChange = null;
         }
 
-        function changeObjectColor() {
-            const activeObj = canvas.getActiveObject();
-            if (activeObj) {
-                const newColor = document.getElementById('objectColor').value;
-                showConfirmPopup(
-                    '¿Deseas cambiar el color de relleno a este color?',
-                    () => {
-                        activeObj.set('fill', newColor);
-                canvas.renderAll();
-                        saveState();
-                    },
-                    'color',
-                    newColor
-                );
-            } else {
-                alert('Por favor, selecciona un elemento primero');
-            }
+        function closePopup() {
+            document.getElementById('sizePopup').style.display = 'none';
+            document.getElementById('customWidth').value = '';
+            document.getElementById('customHeight').value = '';
+            const selected = document.querySelector('.size-option.selected');
+            if (selected) selected.classList.remove('selected');
         }
 
-        function updateTextSize() {
-            const activeObj = canvas.getActiveObject();
-            if (activeObj && activeObj.type === 'textbox') {
-                const newSize = parseInt(document.getElementById('textSize').value);
-                showConfirmPopup(
-                    '¿Deseas cambiar el tamaño del texto a ' + newSize + 'px?',
-                    () => {
-                        activeObj.set({
-                            fontSize: newSize,
-                            scaleX: 1,
-                            scaleY: 1
-                        });
-                canvas.renderAll();
-                        saveState();
-                    },
-                    'font-size'
-                );
-            } else {
-                alert('Por favor, selecciona un texto primero');
-            }
-        }
-
-        function changeFont() {
-            const activeObj = canvas.getActiveObject();
-            if (activeObj && activeObj.type === 'textbox') {
-                const newFont = document.getElementById('fontFamily').value;
-                showConfirmPopup(
-                    '¿Deseas cambiar la fuente a ' + newFont + '?',
-                    () => {
-                        activeObj.set({
-                            fontFamily: newFont,
-                            scaleX: 1,
-                            scaleY: 1
-                        });
-                        canvas.renderAll();
-                        saveState();
-                    },
-                    'font'
-                );
-            }
-        }
-
-        function exportToSVG() {
-            showExportPopup('svg');
-        }
-
-        function exportToPNG() {
-            showExportPopup('png');
-        }
-
-        let currentExportType = null;
-
-        function showExportPopup(type) {
-            currentExportType = type;
-            document.getElementById('exportPopup').style.display = 'flex';
-            document.getElementById('projectName').focus();
-        }
-
-        function closeExportPopup() {
-            document.getElementById('exportPopup').style.display = 'none';
-            currentExportType = null;
-        }
-
-        function confirmExport() {
-            const name = document.getElementById('projectName').value || 'esquema';
-            const link = document.createElement('a');
+        function selectSize(width, height, element) {
+            document.getElementById('customWidth').value = width;
+            document.getElementById('customHeight').value = height;
             
-            if (currentExportType === 'svg') {
-                link.download = name + '.svg';
-                link.href = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(canvas.toSVG());
-            } else {
-                link.download = name + '.png';
-                link.href = canvas.toDataURL({ format: 'png', quality: 1.0 });
-            }
+            const options = document.querySelectorAll('.size-option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        function startEditor() {
+            const width = document.getElementById('customWidth').value;
+            const height = document.getElementById('customHeight').value;
             
-            link.click();
-            closeExportPopup();
-        }
-
-        function bringToFront() {
-            const activeObj = canvas.getActiveObject();
-            if (activeObj) {
-                canvas.bringToFront(activeObj);
-                canvas.renderAll();
-            }
-        }
-
-        function sendToBack() {
-            const activeObj = canvas.getActiveObject();
-            if (activeObj) {
-                canvas.sendToBack(activeObj);
-                canvas.renderAll();
-            }
-        }
-
-        function deleteObject() {
-            const activeObj = canvas.getActiveObject();
-            if (activeObj) {
-                showDeleteConfirmPopup(
-                    '¿Estás seguro de que deseas eliminar este elemento?',
-                    () => {
-                canvas.remove(activeObj);
-                canvas.renderAll();
-                        saveState();
-                    }
-                );
-            } else {
-                alert('Por favor, selecciona un elemento primero');
-            }
-        }
-
-        function showDeleteConfirmPopup(message, callback) {
-            const popup = document.getElementById('confirmPopup');
-            const messageEl = document.getElementById('popupMessage');
-            const buttonsContainer = popup.querySelector('.popup-buttons');
-            
-            messageEl.innerHTML = `
-                <i class="fa-solid fa-trash" style="font-size: 2em; color: #f44336; margin-bottom: 15px;"></i><br>
-                ${message}
-            `;
-            
-            // Cambiar el texto y estilo de los botones
-            const buttons = buttonsContainer.querySelectorAll('button');
-            buttons[0].textContent = 'Eliminar';
-            buttons[0].style.background = '#f44336';
-            buttons[1].style.background = '#666666';
-            
-            popup.style.display = 'flex';
-            pendingChange = callback;
-        }
-
-        // Función para restaurar el popup a su estado original después de cerrarlo
-        function resetPopup() {
-            const popup = document.getElementById('confirmPopup');
-            const buttons = popup.querySelectorAll('.popup-buttons button');
-            
-            buttons[0].textContent = 'Guardar';
-            buttons[0].style.background = '';
-            buttons[1].style.background = '';
-            
-            popup.style.display = 'none';
-        }
-
-        // Modificar la función confirmChange para usar resetPopup
-        function confirmChange(confirmed) {
-            if (confirmed && pendingChange) {
-                pendingChange();
-            }
-            resetPopup();
-            pendingChange = null;
-        }
-
-        document.addEventListener('keydown', function(event) {
-            if ((event.key === 'Delete' || event.key === 'Backspace') && !event.target.matches('input, select')) {
-                event.preventDefault();
-                deleteObject();
-            }
-        });
-
-        function updateCanvasSize() {
-            const width = parseInt(document.getElementById('canvasWidth').value);
-            const height = parseInt(document.getElementById('canvasHeight').value);
-            canvas.setWidth(width);
-            canvas.setHeight(height);
-            canvas.renderAll();
-        }
-
-        function updateShapeDimensions() {
-            const activeObj = canvas.getActiveObject();
-            if (!activeObj) return;
-
-            const width = parseInt(document.getElementById('shapeWidth').value);
-            const height = parseInt(document.getElementById('shapeHeight').value);
-
-            if (activeObj instanceof fabric.Circle) {
-                activeObj.set({
-                    radius: width / 2,
-                    stroke: document.getElementById('strokeColor').value,
-                    strokeWidth: parseInt(document.getElementById('strokeWidth').value)
-                });
-                document.getElementById('shapeHeight').value = width;
-            } else if (activeObj instanceof fabric.Rect) {
-                activeObj.set({
-                    width: width,
-                    height: height,
-                    stroke: document.getElementById('strokeColor').value,
-                    strokeWidth: parseInt(document.getElementById('strokeWidth').value),
-                    rx: parseInt(document.getElementById('borderRadius').value),
-                    ry: parseInt(document.getElementById('borderRadius').value)
-                });
-            }
-            canvas.renderAll();
-        }
-
-        canvas.on('object:scaling', function(e) {
-            const obj = e.target;
-            if (!obj) return;
-
-            if (obj instanceof fabric.Rect) {
-                document.getElementById('shapeWidth').value = Math.round(obj.width * obj.scaleX);
-                document.getElementById('shapeHeight').value = Math.round(obj.height * obj.scaleY);
-            } else if (obj instanceof fabric.Circle) {
-                const diameter = Math.round(obj.radius * 2 * obj.scaleX);
-                document.getElementById('shapeWidth').value = diameter;
-                document.getElementById('shapeHeight').value = diameter;
-            }
-
-            obj.set({
-                stroke: document.getElementById('strokeColor').value,
-                strokeWidth: parseInt(document.getElementById('strokeWidth').value),
-                rx: obj instanceof fabric.Rect ? parseInt(document.getElementById('borderRadius').value) : 0,
-                ry: obj instanceof fabric.Rect ? parseInt(document.getElementById('borderRadius').value) : 0
-            });
-        });
-
-        canvas.on('object:modified', function(e) {
-            const obj = e.target;
-            if (!obj) return;
-
-            if (obj instanceof fabric.Rect) {
-                const newWidth = Math.round(obj.width * obj.scaleX);
-                const newHeight = Math.round(obj.height * obj.scaleY);
-                document.getElementById('shapeWidth').value = newWidth;
-                document.getElementById('shapeHeight').value = newHeight;
-                
-                obj.set({
-                    width: newWidth,
-                    height: newHeight,
-                    scaleX: 1,
-                    scaleY: 1
-                });
-            } else if (obj instanceof fabric.Circle) {
-                const newRadius = Math.round(obj.radius * obj.scaleX);
-                document.getElementById('shapeWidth').value = newRadius * 2;
-                document.getElementById('shapeHeight').value = newRadius * 2;
-                
-                obj.set({
-                    radius: newRadius,
-                    scaleX: 1,
-                    scaleY: 1
-                });
-            }
-
-            obj.set({
-                stroke: document.getElementById('strokeColor').value,
-                strokeWidth: parseInt(document.getElementById('strokeWidth').value),
-                rx: obj instanceof fabric.Rect ? parseInt(document.getElementById('borderRadius').value) : 0,
-                ry: obj instanceof fabric.Rect ? parseInt(document.getElementById('borderRadius').value) : 0
-            });
-
-            canvas.renderAll();
-            saveState();
-        });
-
-        function changeStrokeColor() {
-            const activeObj = canvas.getActiveObject();
-            if (activeObj) {
-                const newColor = document.getElementById('strokeColor').value;
-                showConfirmPopup(
-                    '¿Deseas cambiar el color del borde a este color?',
-                    () => {
-                        activeObj.set('stroke', newColor);
-                canvas.renderAll();
-                        saveState();
-                    },
-                    'color',
-                    newColor
-                );
-            } else {
-                alert('Por favor, selecciona un elemento primero');
-            }
-        }
-
-        function changeStrokeWidth() {
-            const activeObj = canvas.getActiveObject();
-            if (activeObj) {
-                const newWidth = parseInt(document.getElementById('strokeWidth').value);
-                showConfirmPopup(
-                    '¿Deseas cambiar el ancho del borde a ' + newWidth + '?',
-                    () => {
-                        activeObj.set('strokeWidth', newWidth);
-                        canvas.renderAll();
-                        saveState();
-                    },
-                    'border-width'
-                );
-            } else {
-                alert('Por favor, selecciona un elemento primero');
-            }
-        }
-
-        function changeBorderRadius() {
-            const activeObj = canvas.getActiveObject();
-            if (activeObj && (activeObj instanceof fabric.Rect || activeObj instanceof fabric.Image)) {
-                const newRadius = parseInt(document.getElementById('borderRadius').value);
-                showConfirmPopup(
-                    '¿Deseas cambiar el radio del borde a ' + newRadius + '?',
-                    () => {
-                        activeObj.set({
-                            rx: newRadius,
-                            ry: newRadius,
-                            clipPath: new fabric.Rect({
-                                width: activeObj.width,
-                                height: activeObj.height,
-                                rx: newRadius,
-                                ry: newRadius
-                            })
-                        });
-                        canvas.renderAll();
-                        saveState();
-                    },
-                    'border-radius'
-                );
-            } else {
-                alert('Por favor, selecciona un rectángulo o imagen primero');
-            }
-        }
-
-        function changeCanvasColor() {
-            const newColor = document.getElementById('canvasColor').value;
-            showConfirmPopup(
-                '¿Deseas cambiar el color del fondo a este color?',
-                () => {
-                    canvas.setBackgroundColor(newColor, canvas.renderAll.bind(canvas));
-                    saveState();
-                },
-                'color',
-                newColor
-            );
-        }
-
-        // Actualizar los inputs cuando se selecciona un objeto
-        canvas.on('selection:created', updateControls);
-        canvas.on('selection:updated', updateControls);
-
-        function updateControls(e) {
-            const obj = e.selected[0];
-            if (!obj) return;
-
-            // Ocultar todos los controles primero, excepto los que siempre deben verse
-            const allControls = document.querySelectorAll('#sidebar > label, #sidebar > div');
-            allControls.forEach(control => {
-                // No ocultar los controles que siempre deben verse
-                if (
-                    !control.querySelector('.fa-pen-ruler') && // Logo
-                    !control.querySelector('.fa-maximize') && // Redimensionar
-                    !control.querySelector('.fa-font, .fa-circle, .fa-square, .fa-minus, .fa-arrow-right, .fa-image') && // Botones de agregar
-                    !control.querySelector('.fa-mountain-sun') && // Color de fondo
-                    !control.querySelector('.fa-layer-group') && // Capas
-                    !control.querySelector('.fa-file-image') && // Botones de exportar
-                    !control.querySelector('.fa-arrow-up') // Controles de capa
-                ) {
-                    control.style.display = 'none';
-                }
-            });
-
-            // Ocultar siempre el selector de fuente por defecto
-            document.querySelector('label:has(#fontFamily)').style.display = 'none';
-
-            // Mostrar controles según el tipo de objeto
-            if (obj instanceof fabric.Image) {
-                // Para imágenes, mostrar solo borde, radio, dimensiones y opacidad
-                document.querySelector('label:has(#strokeWidth)').style.display = 'flex';
-                document.querySelector('label:has(#borderRadius)').style.display = 'flex';
-                document.querySelector('label:has(#shapeWidth)').style.display = 'flex';
-                document.querySelector('div:has(#strokeColor)').parentElement.style.display = 'flex';
-                document.querySelector('div:has(#fillOpacity)').style.display = 'flex';
-                
-                // Actualizar valores
-                document.getElementById('strokeWidth').value = obj.strokeWidth || 0;
-                document.getElementById('borderRadius').value = obj.rx || 0;
-                document.getElementById('shapeWidth').value = Math.round(obj.width * obj.scaleX);
-                document.getElementById('shapeHeight').value = Math.round(obj.height * obj.scaleY);
-                document.getElementById('strokeColor').value = obj.stroke || '#000000';
-                document.getElementById('strokeColorCode').value = (obj.stroke || '#000000').toUpperCase();
-                document.getElementById('fillOpacity').value = Math.round(obj.opacity * 100);
-                document.getElementById('fillOpacity').nextElementSibling.textContent = Math.round(obj.opacity * 100) + '%';
-            } 
-            else if (obj.type === 'textbox') {
-                // Para texto, mostrar controles relevantes incluyendo la fuente
-                document.querySelector('label:has(#textSize)').style.display = 'flex';
-                document.querySelector('label:has(#fontFamily)').style.display = 'flex'; // Solo mostrar fuente para texto
-                document.querySelector('div:has(#objectColor)').parentElement.style.display = 'flex';
-                document.querySelector('div:has(#fillOpacity)').style.display = 'flex';
-                
-                // Actualizar valores
-                document.getElementById('textSize').value = obj.fontSize || 20;
-                document.getElementById('fontFamily').value = obj.fontFamily || 'Arial';
-                document.getElementById('objectColor').value = obj.fill || '#000000';
-                document.getElementById('fillColorCode').value = (obj.fill || '#000000').toUpperCase();
-                document.getElementById('fillOpacity').value = Math.round(obj.opacity * 100);
-                document.getElementById('fillOpacity').nextElementSibling.textContent = Math.round(obj.opacity * 100) + '%';
-            }
-            else {
-                // Para otros objetos (rectángulos, círculos, líneas, etc.)
-                allControls.forEach(control => {
-                    if (!control.style.display && !control.querySelector('#fontFamily')) {
-                        control.style.display = 'flex';
-                    }
-                });
-                
-                // Actualizar todos los valores
-                document.getElementById('objectColor').value = obj.fill || '#000000';
-                document.getElementById('fillColorCode').value = (obj.fill || '#000000').toUpperCase();
-                document.getElementById('strokeColor').value = obj.stroke || '#000000';
-                document.getElementById('strokeColorCode').value = (obj.stroke || '#000000').toUpperCase();
-                document.getElementById('strokeWidth').value = obj.strokeWidth || 0;
-                document.getElementById('fillOpacity').value = Math.round(obj.opacity * 100);
-                document.getElementById('fillOpacity').nextElementSibling.textContent = Math.round(obj.opacity * 100) + '%';
-                
-                // Mostrar border radius para rectángulos
-                if (obj instanceof fabric.Rect) {
-                    document.querySelector('label:has(#borderRadius)').style.display = 'flex';
-                    document.getElementById('borderRadius').value = obj.rx || 0;
-                }
-            }
-
-            // Si es una línea o flecha, deshabilitar el escalado
-            if (obj instanceof fabric.Line || obj instanceof fabric.Group) {
-                obj.lockScalingX = true;
-                obj.lockScalingY = true;
-            }
-        }
-
-        function showResolutionPopup() {
-            document.getElementById('resolutionPopup').style.display = 'flex';
-        }
-
-        function closeResolutionPopup() {
-            document.getElementById('resolutionPopup').style.display = 'none';
-        }
-
-        function applyResolution() {
-            const width = parseInt(document.getElementById('canvasWidth').value);
-            const height = parseInt(document.getElementById('canvasHeight').value);
-            canvas.setWidth(width);
-            canvas.setHeight(height);
-            canvas.renderAll();
-            closeResolutionPopup();
-            saveState();
-        }
-
-        // Modificar los inputs para que muestren el popup al cambiar
-        document.getElementById('objectColor').addEventListener('change', changeObjectColor);
-        document.getElementById('strokeColor').addEventListener('change', changeStrokeColor);
-        document.getElementById('strokeWidth').addEventListener('change', changeStrokeWidth);
-        document.getElementById('borderRadius').addEventListener('change', changeBorderRadius);
-        document.getElementById('textSize').addEventListener('change', updateTextSize);
-        document.getElementById('fontFamily').addEventListener('change', changeFont);
-        document.getElementById('canvasColor').addEventListener('change', changeCanvasColor);
-
-        document.getElementById('objectColor').addEventListener('input', function(e) {
-            document.getElementById('fillColorCode').value = e.target.value.toUpperCase();
-        });
-
-        document.getElementById('strokeColor').addEventListener('input', function(e) {
-            document.getElementById('strokeColorCode').value = e.target.value.toUpperCase();
-        });
-
-        document.getElementById('canvasColor').addEventListener('input', function(e) {
-            document.getElementById('canvasColorCode').value = e.target.value.toUpperCase();
-        });
-
-        function showLayers() {
-            const layersList = document.getElementById('layersList');
-            layersList.innerHTML = '';
-            
-            canvas.getObjects().forEach((obj, index) => {
-                const div = document.createElement('div');
-                div.style.cssText = `
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    padding: 8px;
-                    border-bottom: 1px solid #505050;
-                    background: #2d2d2d;
-                `;
-                
-                let name = 'Elemento ' + (index + 1);
-                if (obj.type === 'textbox') name = '"' + obj.text + '"';
-                if (obj instanceof fabric.Image) name = 'Imagen ' + (index + 1);
-                if (obj instanceof fabric.Circle) name = 'Círculo ' + (index + 1);
-                if (obj instanceof fabric.Rect) name = 'Rectángulo ' + (index + 1);
-                if (obj instanceof fabric.Line) name = 'Línea ' + (index + 1);
-                if (obj instanceof fabric.Group) name = 'Flecha ' + (index + 1);
-                
-                div.innerHTML = `
-                    <span style="flex: 1;">${name}</span>
-                    <div style="display: flex; gap: 4px;">
-                        <button onclick="moveLayerUp(${index})" style="
-                            background: #404040;
-                            border: none;
-                            padding: 4px 8px;
-                            border-radius: 4px;
-                            cursor: pointer;
-                            color: white;
-                        ">
-                            <i class="fa-solid fa-arrow-up"></i>
-                        </button>
-                        <button onclick="moveLayerDown(${index})" style="
-                            background: #404040;
-                            border: none;
-                            padding: 4px 8px;
-                            border-radius: 4px;
-                            cursor: pointer;
-                            color: white;
-                        ">
-                            <i class="fa-solid fa-arrow-down"></i>
-                        </button>
-                        <button onclick="deleteLayerObject(${index})" style="
-                            background: #404040;
-                            border: none;
-                            padding: 4px 8px;
-                            border-radius: 4px;
-                            cursor: pointer;
-                            color: white;
-                        ">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </div>
-                `;
-                
-                layersList.appendChild(div);
-            });
-            
-            document.getElementById('layersPopup').style.display = 'flex';
-        }
-
-        function closeLayers() {
-            document.getElementById('layersPopup').style.display = 'none';
-        }
-
-        function moveLayerUp(index) {
-            if (index < canvas.getObjects().length - 1) {
-                canvas.getObjects()[index].moveTo(index + 1);
-                canvas.renderAll();
-                showLayers(); // Actualizar la lista
-                saveState();
-            }
-        }
-
-        function moveLayerDown(index) {
-            if (index > 0) {
-                canvas.getObjects()[index].moveTo(index - 1);
-                canvas.renderAll();
-                showLayers(); // Actualizar la lista
-                saveState();
-            }
-        }
-
-        function deleteLayerObject(index) {
-            const popup = document.getElementById('confirmPopup');
-            popup.style.zIndex = '1001'; // Para que aparezca sobre el popup de capas
-
-            // Modificar el contenido del popup
-            document.getElementById('popupMessage').innerHTML = `
-                <i class="fa-solid fa-trash" style="font-size: 2em; color: #f44336; margin-bottom: 15px;"></i><br>
-                ¿Estás seguro de que deseas eliminar este elemento?
-            `;
-
-            // Modificar los botones
-            const buttons = popup.querySelector('.popup-buttons');
-            buttons.innerHTML = `
-                <button onclick="confirmChange(true)" style="background: #f44336;">Delete</button>
-                <button onclick="confirmChange(false)" style="background: #666666;">Cancelar</button>
-            `;
-
-            popup.style.display = 'flex';
-            pendingChange = () => {
-                const objects = canvas.getObjects();
-                canvas.remove(objects[index]);
-                canvas.renderAll();
-                showLayers(); // Actualizar la lista
-                saveState();
-                popup.style.zIndex = '1000'; // Restaurar el z-index original
-            };
-        }
-
-        function changeOpacity(type) {
-            const activeObj = canvas.getActiveObject();
-            if (activeObj) {
-                const slider = document.getElementById(type + 'Opacity');
-                const value = parseInt(slider.value);
-                slider.nextElementSibling.textContent = value + '%';
-                
-                showConfirmPopup(
-                    `¿Deseas cambiar la opacidad del ${type === 'fill' ? 'relleno' : 'borde'} a ${value}%?`,
-                    () => {
-                        if (type === 'fill') {
-                            activeObj.set('opacity', value / 100);
-                        } else {
-                            activeObj.set('strokeOpacity', value / 100);
-                        }
-                        canvas.renderAll();
-                        saveState();
-                    }
-                );
-            }
-        }
-
-        function updateColorFromCode(input, colorPickerId) {
-            // Validar que el código de color sea válido
-            const isValidColor = /^#[0-9A-F]{6}$/i.test(input.value);
-            if (!isValidColor) {
-                input.value = document.getElementById(colorPickerId).value.toUpperCase();
+            if (!width || !height) {
+                alert('Por favor, selecciona un tamaño o introduce dimensiones personalizadas');
                 return;
             }
 
-            // Actualizar el color picker
-            const colorPicker = document.getElementById(colorPickerId);
-            colorPicker.value = input.value;
-
-            // Disparar el evento change del color picker
-            const event = new Event('change');
-            colorPicker.dispatchEvent(event);
-        }
-
-        function startDrawingLine() {
-            isDrawingLine = true;
-            isDrawingArrow = false;
-            canvas.defaultCursor = 'crosshair';
-            canvas.selection = false;
-            canvas.forEachObject(function(o) {
-                o.selectable = false;
-            });
-            // Establecer ancho de borde por defecto para líneas
-            document.getElementById('strokeWidth').value = 3;
-        }
-
-        function startDrawingArrow() {
-            isDrawingArrow = true;
-            isDrawingLine = false;
-            canvas.defaultCursor = 'crosshair';
-            canvas.selection = false;
-            canvas.forEachObject(function(o) {
-                o.selectable = false;
-            });
-            // Establecer ancho de borde por defecto para flechas
-            document.getElementById('strokeWidth').value = 3;
-        }
-
-        function stopDrawing() {
-            isDrawingLine = false;
-            isDrawingArrow = false;
-            canvas.defaultCursor = 'default';
-            canvas.selection = true;
-            canvas.forEachObject(function(o) {
-                o.selectable = true;
-            });
-            startPoint = null;
-        }
-
-        canvas.on('mouse:down', function(o) {
-            if (isDrawingLine || isDrawingArrow) {
-                let pointer = canvas.getPointer(o.e);
-                startPoint = pointer;
-            }
-        });
-
-        canvas.on('mouse:up', function(o) {
-            if ((isDrawingLine || isDrawingArrow) && startPoint) {
-                let pointer = canvas.getPointer(o.e);
-                let points = [startPoint.x, startPoint.y, pointer.x, pointer.y];
-                
-                if (isDrawingLine) {
-                    let line = new fabric.Line(points, {
-                        strokeWidth: Math.max(1, parseInt(document.getElementById('strokeWidth').value)), // Mínimo 1px
-                        stroke: document.getElementById('strokeColor').value,
-                        strokeOpacity: parseInt(document.getElementById('strokeOpacity').value) / 100,
-                        lockScalingX: true,
-                        lockScalingY: true
-                    });
-                    canvas.add(line);
-                    canvas.setActiveObject(line);
-                } else if (isDrawingArrow) {
-                    let deltaX = pointer.x - startPoint.x;
-                    let deltaY = pointer.y - startPoint.y;
-                    let angle = Math.atan2(deltaY, deltaX);
-                    
-                    let strokeWidth = Math.max(1, parseInt(document.getElementById('strokeWidth').value)); // Mínimo 1px
-                    
-                    // Línea principal
-                    let line = new fabric.Line(points, {
-                        strokeWidth: strokeWidth,
-                        stroke: document.getElementById('strokeColor').value,
-                        strokeOpacity: parseInt(document.getElementById('strokeOpacity').value) / 100,
-                        lockScalingX: true,
-                        lockScalingY: true
-                    });
-                    
-                    // Punta de la flecha
-                    let headLength = 20;
-                    let headAngle = Math.PI / 6;
-                    
-                    let x1 = pointer.x - headLength * Math.cos(angle - headAngle);
-                    let y1 = pointer.y - headLength * Math.sin(angle - headAngle);
-                    let x2 = pointer.x - headLength * Math.cos(angle + headAngle);
-                    let y2 = pointer.y - headLength * Math.sin(angle + headAngle);
-                    
-                    let arrow = new fabric.Polygon([
-                        {x: pointer.x, y: pointer.y},
-                        {x: x1, y: y1},
-                        {x: x2, y: y2}
-                    ], {
-                        fill: document.getElementById('strokeColor').value,
-                        stroke: document.getElementById('strokeColor').value,
-                        strokeWidth: strokeWidth,
-                        opacity: parseInt(document.getElementById('strokeOpacity').value) / 100,
-                        lockScalingX: true,
-                        lockScalingY: true
-                    });
-                    
-                    let group = new fabric.Group([line, arrow], {
-                        lockScalingX: true,
-                        lockScalingY: true
-                    });
-                    
-                    canvas.add(group);
-                    canvas.setActiveObject(group);
-                }
-                
-                saveState();
-                stopDrawing();
-            }
-        });
-
-        canvas.on('mouse:move', function(o) {
-            if ((isDrawingLine || isDrawingArrow) && startPoint) {
-                canvas.requestRenderAll();
-            }
-        });
-
-        function showImagePopup() {
-            document.getElementById('imagePopup').style.display = 'flex';
-        }
-
-        function closeImagePopup() {
-            document.getElementById('imagePopup').style.display = 'none';
-            document.getElementById('imageInput').value = '';
-        }
-
-        function handleImageUpload(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    fabric.Image.fromURL(e.target.result, function(img) {
-                        // Escalar la imagen si es muy grande
-                        if (img.width > canvas.width || img.height > canvas.height) {
-                            const scale = Math.min(
-                                canvas.width / img.width, 
-                                canvas.height / img.height
-                            ) * 0.8; // 80% del tamaño máximo
-                            img.scale(scale);
-                        }
-                        
-                        img.set({
-                            left: (canvas.width - img.width * (img.scaleX || 1)) / 2,
-                            top: (canvas.height - img.height * (img.scaleY || 1)) / 2
-                        });
-                        
-                        canvas.add(img);
-                        canvas.setActiveObject(img);
-                        canvas.renderAll();
-                        saveState();
-                    });
-                    
-                    closeImagePopup();
-                };
-                
-                reader.readAsDataURL(input.files[0]);
-            }
+            // Redirigir al editor con los parámetros
+            window.location.href = `editor.html?width=${width}&height=${height}&mode=${currentMode}`;
         }
     </script>
 </body>
-</html>
+</html> 
