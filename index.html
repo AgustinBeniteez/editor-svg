@@ -214,17 +214,24 @@
 </head>
 <body>
     <div id="sidebar">
-        <h2>Controles</h2>
-        <button onclick="showResolutionPopup()"><i class="fa-solid fa-maximize"></i></button>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+            <i class="fa-solid fa-pen-ruler" style="font-size: 2em; color: #4CAF50;"></i>
+            <button onclick="showResolutionPopup()" style="padding: 8px 16px;">
+                <i class="fa-solid fa-maximize"></i>
+                Redimensionar
+            </button>
+        </div>
         <div style="display: flex; gap: 8px;">
             <button onclick="addText()"><i class="fa-solid fa-font"></i></button>
             <button onclick="addCircle()"><i class="fa-solid fa-circle"></i></button>
             <button onclick="addSquare()"><i class="fa-solid fa-square"></i></button>
         </div>
         <label style="flex-direction: row; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-text-width"></i>
             Tamaño Texto: <input type="number" id="textSize" value="20" onchange="updateTextSize()">
         </label>
         <label style="flex-direction: row; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-font"></i>
             Fuente: <select id="fontFamily" onchange="changeFont()">
                 <option value="Arial">Arial</option>
                 <option value="Courier New">Courier New</option>
@@ -279,7 +286,7 @@
             </div>
 
             <div style="display: flex; align-items: center; gap: 8px;">
-                <i class="fa-solid fa-square"></i>
+                <i class="fa-solid fa-mountain-sun"></i>
                 <span>Color Fondo:</span>
             </div>
             <div style="display: flex; align-items: center; gap: 8px;">
@@ -345,9 +352,9 @@
         <div class="popup">
             <p>Cambiar Resolución</p>
             <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;">
-                <input type="number" id="canvasWidth" value="1649" style="width: 80px;">
+                <input type="number" id="canvasWidth" value="1589" style="width: 80px;">
                 <span style="color: white; align-self: center;">x</span>
-                <input type="number" id="canvasHeight" value="929" style="width: 80px;">
+                <input type="number" id="canvasHeight" value="889" style="width: 80px;">
             </div>
             <div class="popup-buttons">
                 <button onclick="applyResolution()">Aplicar</button>
@@ -399,8 +406,8 @@
 
     <script>
         const canvas = new fabric.Canvas('canvas', { 
-            width: 1649, 
-            height: 929, 
+            width: 1589, 
+            height: 889, 
             backgroundColor: document.getElementById('canvasColor').value 
         });
         let state = [];
