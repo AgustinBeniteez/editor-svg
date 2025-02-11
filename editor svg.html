@@ -3,40 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css' rel='stylesheet'/>
     <title>Editor de Esquemas</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; display: flex; height: 100vh; }
-        #sidebar { width: 250px; background: #f4f4f4; padding: 10px; box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1); }
-        #canvas-container { flex-grow: 1; display: flex; align-items: center; justify-content: center; background: white; }
-        canvas { border: 1px solid black; }
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            display: flex; 
+            height: 100vh;
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+        #sidebar { 
+            width: 250px; 
+            background: #2d2d2d; 
+            padding: 20px; 
+            box-shadow: 2px 0px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 0 15px 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        #canvas-container { 
+            flex-grow: 1; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: #1a1a1a; 
+            padding: 20px;
+        }
+        canvas { 
+            border: 0;
+            border-radius: 8px;
+        }
+        
+        #sidebar button {
+            background: #404040;
+            border: none;
+            padding: 8px;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            min-width: 36px;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #sidebar button:hover {
+            background: #505050;
+        }
+        
+        #sidebar button i {
+            font-size: 1em;
+        }
+        
+        #sidebar input, #sidebar select {
+            background: #363636;
+            border: 1px solid #505050;
+            padding: 6px;
+            border-radius: 4px;
+            color: white;
+            margin-top: 4px;
+        }
+        
+        #sidebar label {
+            display: flex;
+            flex-direction: column;
+            font-size: 14px;
+            color: #cccccc;
+            margin-bottom: 4px;
+        }
+        
+        #sidebar label[style*="flex-direction: row"] input[type="color"] {
+            margin-left: auto;
+        }
+        
+        #sidebar h2 {
+            color: #ffffff;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        #sidebar input[type="color"] {
+            width: 50px;
+            height: 30px;
+            padding: 0;
+            margin: 0;
+        }
+        
+        #sidebar input[type="number"] {
+            width: 60px;
+        }
+        
+        #sidebar input[type="text"], #sidebar select {
+            flex: 1;
+            min-width: 100px;
+        }
+        
+        .dimensions-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .popup {
+            background: #2d2d2d;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        
+        .popup-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        
+        .popup-buttons button {
+            min-width: 80px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            color: white;
+        }
+        
+        .popup-buttons button:first-child {
+            background: #4CAF50;
+        }
+        
+        .popup-buttons button:last-child {
+            background: #f44336;
+        }
+        
+        .popup-buttons button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .popup-buttons button:active {
+            transform: translateY(1px);
+            box-shadow: none;
+        }
+        
+        .popup p {
+            color: #ffffff;
+            font-size: 16px;
+            margin: 0 0 15px 0;
+        }
     </style>
 </head>
 <body>
     <div id="sidebar">
         <h2>Controles</h2>
-        <label>Resolución: <input type="number" id="canvasWidth" value="1649"> x <input type="number" id="canvasHeight" value="929"> <button onclick="updateCanvasSize()">Aplicar</button></label>
+        <label style="flex-direction: row; align-items: center; gap: 8px;">
+            Resolución: 
+            <input type="number" id="canvasWidth" value="1649"> x 
+            <input type="number" id="canvasHeight" value="929">
+            <button onclick="updateCanvasSize()">Aplicar</button>
+        </label>
         <label>Nombre del Proyecto: <input type="text" id="projectName"></label>
-        <button onclick="addText()">Agregar Texto</button>
-        <button onclick="addCircle()">Agregar Círculo</button>
-        <button onclick="addSquare()">Agregar Cuadrado</button>
-        <div>
-            <label>Ancho: <input type="number" id="shapeWidth" value="150" onchange="updateShapeDimensions()"></label>
-            <label>Alto: <input type="number" id="shapeHeight" value="100" onchange="updateShapeDimensions()"></label>
+        <div style="display: flex; gap: 8px;">
+            <button onclick="addText()"><i class="fa-solid fa-font"></i></button>
+            <button onclick="addCircle()"><i class="fa-solid fa-circle"></i></button>
+            <button onclick="addSquare()"><i class="fa-solid fa-square"></i></button>
         </div>
-        <label>Tamaño Texto: <input type="number" id="textSize" value="20" onchange="updateTextSize()"></label>
-        <label>Fuente: <select id="fontFamily" onchange="changeFont()">
-            <option value="Arial">Arial</option>
-            <option value="Courier New">Courier New</option>
-            <option value="Georgia">Georgia</option>
-            <option value="Times New Roman">Times New Roman</option>
-            <option value="Verdana">Verdana</option>
-        </select></label>
-        <label>Color Relleno: <input type="color" id="objectColor" onchange="changeObjectColor()"></label>
-        <label>Color Borde: <input type="color" id="strokeColor" value="#000000" onchange="changeStrokeColor()"></label>
-        <label>Ancho Borde: <input type="number" id="strokeWidth" value="1" min="0" onchange="changeStrokeWidth()"></label>
-        <label>Radio Borde: <input type="number" id="borderRadius" value="0" onchange="changeBorderRadius()"></label>
-        <label>Color Fondo Lienzo: <input type="color" id="canvasColor" value="#ffffff" onchange="changeCanvasColor()"></label>
+        <label style="flex-direction: row; align-items: center; gap: 8px;">
+            Ancho: <input type="number" id="shapeWidth" value="150">
+            Alto: <input type="number" id="shapeHeight" value="100">
+        </label>
+        <label style="flex-direction: row; align-items: center; gap: 8px;">
+            Tamaño Texto: <input type="number" id="textSize" value="20" onchange="updateTextSize()">
+        </label>
+        <label style="flex-direction: row; align-items: center; gap: 8px;">
+            Fuente: <select id="fontFamily" onchange="changeFont()">
+                <option value="Arial">Arial</option>
+                <option value="Courier New">Courier New</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Times New Roman">Times New Roman</option>
+                <option value="Verdana">Verdana</option>
+            </select>
+        </label>
+        <label style="flex-direction: row; align-items: center; gap: 8px;">
+            Color Relleno: <input type="color" id="objectColor" onchange="changeObjectColor()">
+        </label>
+        <label style="flex-direction: row; align-items: center; gap: 8px;">
+            Color Borde: <input type="color" id="strokeColor" value="#000000" onchange="changeStrokeColor()">
+        </label>
+        <label style="flex-direction: row; align-items: center; gap: 8px;">
+            Ancho Borde: <input type="number" id="strokeWidth" value="0" min="0" onchange="changeStrokeWidth()">
+        </label>
+        <label style="flex-direction: row; align-items: center; gap: 8px;">
+            Radio Borde: <input type="number" id="borderRadius" value="0" onchange="changeBorderRadius()">
+        </label>
+        <label style="flex-direction: row; align-items: center; gap: 8px;">
+            Color Fondo: <input type="color" id="canvasColor" value="#ffffff" onchange="changeCanvasColor()">
+        </label>
         <button onclick="bringToFront()">Traer al Frente</button>
         <button onclick="sendToBack()">Enviar al Fondo</button>
         <button onclick="deleteObject()">Eliminar Elemento</button>
@@ -49,6 +234,16 @@
         <canvas id="canvas"></canvas>
     </div>
     
+    <div class="popup-overlay" id="confirmPopup">
+        <div class="popup">
+            <p id="popupMessage"></p>
+            <div class="popup-buttons">
+                <button onclick="confirmChange(true)">Guardar</button>
+                <button onclick="confirmChange(false)">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const canvas = new fabric.Canvas('canvas', { 
             width: 1649, 
@@ -57,6 +252,7 @@
         });
         let state = [];
         let index = -1;
+        let pendingChange = null;
 
         function saveState() {
             if (index < state.length - 1) {
@@ -96,7 +292,8 @@
                 top: 100,
                 fontSize: parseInt(document.getElementById('textSize').value),
                 fill: document.getElementById('objectColor').value,
-                fontFamily: document.getElementById('fontFamily').value
+                fontFamily: document.getElementById('fontFamily').value,
+                strokeWidth: 0
             });
             canvas.add(text);
             canvas.setActiveObject(text);
@@ -110,7 +307,7 @@
                 radius: width / 2,
                 fill: document.getElementById('objectColor').value,
                 stroke: document.getElementById('strokeColor').value,
-                strokeWidth: parseInt(document.getElementById('strokeWidth').value)
+                strokeWidth: 0
             });
             canvas.add(circle);
             canvas.setActiveObject(circle);
@@ -125,7 +322,7 @@
                 height: width,
                 fill: document.getElementById('objectColor').value,
                 stroke: document.getElementById('strokeColor').value,
-                strokeWidth: parseInt(document.getElementById('strokeWidth').value),
+                strokeWidth: 0,
                 rx: parseInt(document.getElementById('borderRadius').value),
                 ry: parseInt(document.getElementById('borderRadius').value)
             });
@@ -133,27 +330,68 @@
             canvas.setActiveObject(square);
         }
 
+        function showConfirmPopup(message, changeCallback) {
+            document.getElementById('popupMessage').textContent = message;
+            document.getElementById('confirmPopup').style.display = 'flex';
+            pendingChange = changeCallback;
+        }
+        
+        function confirmChange(confirmed) {
+            document.getElementById('confirmPopup').style.display = 'none';
+            if (confirmed && pendingChange) {
+                pendingChange();
+            }
+            pendingChange = null;
+        }
+
         function changeObjectColor() {
             const activeObj = canvas.getActiveObject();
             if (activeObj) {
-                activeObj.set('fill', document.getElementById('objectColor').value);
-                canvas.renderAll();
+                const newColor = document.getElementById('objectColor').value;
+                showConfirmPopup(
+                    '¿Deseas cambiar el color de relleno a ' + newColor + '?',
+                    () => {
+                        activeObj.set('fill', newColor);
+                        canvas.renderAll();
+                        saveState();
+                    }
+                );
+            } else {
+                alert('Por favor, selecciona un elemento primero');
             }
         }
 
         function updateTextSize() {
             const activeObj = canvas.getActiveObject();
             if (activeObj && activeObj.type === 'textbox') {
-                activeObj.set('fontSize', parseInt(document.getElementById('textSize').value));
-                canvas.renderAll();
+                const newSize = parseInt(document.getElementById('textSize').value);
+                showConfirmPopup(
+                    '¿Deseas cambiar el tamaño del texto a ' + newSize + '?',
+                    () => {
+                        activeObj.set('fontSize', newSize);
+                        canvas.renderAll();
+                        saveState();
+                    }
+                );
+            } else {
+                alert('Por favor, selecciona un texto primero');
             }
         }
 
         function changeFont() {
             const activeObj = canvas.getActiveObject();
             if (activeObj && activeObj.type === 'textbox') {
-                activeObj.set('fontFamily', document.getElementById('fontFamily').value);
-                canvas.renderAll();
+                const newFont = document.getElementById('fontFamily').value;
+                showConfirmPopup(
+                    '¿Deseas cambiar la fuente a ' + newFont + '?',
+                    () => {
+                        activeObj.set('fontFamily', newFont);
+                        canvas.renderAll();
+                        saveState();
+                    }
+                );
+            } else {
+                alert('Por favor, selecciona un texto primero');
             }
         }
 
@@ -301,24 +539,93 @@
         function changeStrokeColor() {
             const activeObj = canvas.getActiveObject();
             if (activeObj) {
-                activeObj.set('stroke', document.getElementById('strokeColor').value);
-                canvas.renderAll();
+                const newColor = document.getElementById('strokeColor').value;
+                showConfirmPopup(
+                    '¿Deseas cambiar el color del borde a ' + newColor + '?',
+                    () => {
+                        activeObj.set('stroke', newColor);
+                        canvas.renderAll();
+                        saveState();
+                    }
+                );
+            } else {
+                alert('Por favor, selecciona un elemento primero');
             }
         }
 
         function changeStrokeWidth() {
             const activeObj = canvas.getActiveObject();
             if (activeObj) {
-                activeObj.set('strokeWidth', parseInt(document.getElementById('strokeWidth').value));
-                canvas.renderAll();
+                const newWidth = parseInt(document.getElementById('strokeWidth').value);
+                showConfirmPopup(
+                    '¿Deseas cambiar el ancho del borde a ' + newWidth + '?',
+                    () => {
+                        activeObj.set('strokeWidth', newWidth);
+                        canvas.renderAll();
+                        saveState();
+                    }
+                );
+            } else {
+                alert('Por favor, selecciona un elemento primero');
+            }
+        }
+
+        function changeBorderRadius() {
+            const activeObj = canvas.getActiveObject();
+            if (activeObj && activeObj instanceof fabric.Rect) {
+                const newRadius = parseInt(document.getElementById('borderRadius').value);
+                showConfirmPopup(
+                    '¿Deseas cambiar el radio del borde a ' + newRadius + '?',
+                    () => {
+                        activeObj.set({
+                            rx: newRadius,
+                            ry: newRadius
+                        });
+                        canvas.renderAll();
+                        saveState();
+                    }
+                );
+            } else {
+                alert('Por favor, selecciona un rectángulo primero');
             }
         }
 
         function changeCanvasColor() {
-            canvas.setBackgroundColor(
-                document.getElementById('canvasColor').value,
-                canvas.renderAll.bind(canvas)
+            const newColor = document.getElementById('canvasColor').value;
+            showConfirmPopup(
+                '¿Deseas cambiar el color del fondo a ' + newColor + '?',
+                () => {
+                    canvas.setBackgroundColor(newColor, canvas.renderAll.bind(canvas));
+                    saveState();
+                }
             );
+        }
+
+        // Actualizar los inputs cuando se selecciona un objeto
+        canvas.on('selection:created', updateControls);
+        canvas.on('selection:updated', updateControls);
+
+        function updateControls(e) {
+            const obj = e.selected[0];
+            if (!obj) return;
+
+            // Actualizar color de relleno
+            document.getElementById('objectColor').value = obj.fill || '#000000';
+            
+            // Actualizar color y ancho de borde
+            document.getElementById('strokeColor').value = obj.stroke || '#000000';
+            document.getElementById('strokeWidth').value = obj.strokeWidth || 0;
+            
+            // Si es un rectángulo, actualizar radio del borde
+            if (obj instanceof fabric.Rect) {
+                document.getElementById('borderRadius').value = obj.rx || 0;
+            }
+            
+            // Si es un texto, actualizar tamaño y fuente
+            if (obj.type === 'textbox') {
+                document.getElementById('textSize').value = obj.fontSize || 20;
+                document.getElementById('fontFamily').value = obj.fontFamily || 'Arial';
+            }
         }
     </script>
 </body>
