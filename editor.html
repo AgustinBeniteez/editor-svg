@@ -1200,68 +1200,82 @@
         });
 
         function showLayers() {
-            const layersList = document.getElementById('layersList');
-            layersList.innerHTML = '';
+            const popup = document.getElementById('layersPopup');
+            const list = document.getElementById('layersList');
+            const objects = canvas.getObjects();
             
-            canvas.getObjects().forEach((obj, index) => {
-                const div = document.createElement('div');
-                div.style.cssText = `
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    padding: 8px;
-                    border-bottom: 1px solid #505050;
-                    background: #2d2d2d;
-                `;
-                
-                let name = 'Elemento ' + (index + 1);
-                if (obj.type === 'textbox') name = '"' + obj.text + '"';
-                if (obj instanceof fabric.Image) name = 'Imagen ' + (index + 1);
-                if (obj instanceof fabric.Circle) name = 'Círculo ' + (index + 1);
-                if (obj instanceof fabric.Rect) name = 'Rectángulo ' + (index + 1);
-                if (obj instanceof fabric.Line) name = 'Línea ' + (index + 1);
-                if (obj instanceof fabric.Group) name = 'Flecha ' + (index + 1);
-                
-                div.innerHTML = `
-                    <span style="flex: 1;">${name}</span>
-                    <div style="display: flex; gap: 4px;">
-                        <button onclick="moveLayerUp(${index})" style="
-                            background: #404040;
-                            border: none;
-                            padding: 4px 8px;
-                            border-radius: 4px;
-                            cursor: pointer;
-                            color: white;
-                        ">
-                            <i class="fa-solid fa-arrow-up"></i>
-                        </button>
-                        <button onclick="moveLayerDown(${index})" style="
-                            background: #404040;
-                            border: none;
-                            padding: 4px 8px;
-                            border-radius: 4px;
-                            cursor: pointer;
-                            color: white;
-                        ">
-                            <i class="fa-solid fa-arrow-down"></i>
-                        </button>
-                        <button onclick="deleteLayerObject(${index})" style="
-                            background: #404040;
-                            border: none;
-                            padding: 4px 8px;
-                            border-radius: 4px;
-                            cursor: pointer;
-                            color: white;
-                        ">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
+            // Invertir el array para mostrar las capas en el orden correcto
+            const reversedObjects = [...objects].reverse();
+            
+            list.innerHTML = reversedObjects.map((obj, index) => {
+                // Determinar el icono según el tipo de objeto
+                let icon = '';
+                if (obj.type === 'textbox') {
+                    icon = '<i class="fa-solid fa-font"></i>';
+                } else if (obj.type === 'circle') {
+                    icon = '<i class="fa-solid fa-circle"></i>';
+                } else if (obj.type === 'rect') {
+                    icon = '<i class="fa-solid fa-square"></i>';
+                } else if (obj.type === 'line') {
+                    icon = '<i class="fa-solid fa-minus"></i>';
+                } else if (obj instanceof fabric.Group) {
+                    icon = '<i class="fa-solid fa-arrow-right"></i>';
+                } else if (obj.type === 'image') {
+                    icon = '<i class="fa-solid fa-image"></i>';
+                }
+
+                // Ajustar el índice para las funciones de mover
+                const originalIndex = objects.length - 1 - index;
+
+                return `
+                    <div style="
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        padding: 8px;
+                        background: #404040;
+                        margin-bottom: 4px;
+                        border-radius: 4px;
+                    ">
+                        ${icon}
+                        <span style="flex-grow: 1;">Capa ${index + 1}</span>
+                        <div style="display: flex; gap: 4px;">
+                            <button onclick="moveLayerUp(${originalIndex})" style="
+                                background: #666666;
+                                border: none;
+                                color: white;
+                                padding: 4px 8px;
+                                border-radius: 4px;
+                                cursor: pointer;
+                            ">
+                                <i class="fa-solid fa-arrow-up"></i>
+                            </button>
+                            <button onclick="moveLayerDown(${originalIndex})" style="
+                                background: #666666;
+                                border: none;
+                                color: white;
+                                padding: 4px 8px;
+                                border-radius: 4px;
+                                cursor: pointer;
+                            ">
+                                <i class="fa-solid fa-arrow-down"></i>
+                            </button>
+                            <button onclick="deleteLayer(${originalIndex})" style="
+                                background: #f44336;
+                                border: none;
+                                color: white;
+                                padding: 4px 8px;
+                                border-radius: 4px;
+                                cursor: pointer;
+                            ">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
                     </div>
                 `;
-                
-                layersList.appendChild(div);
-            });
+            }).join('');
             
-            document.getElementById('layersPopup').style.display = 'flex';
+            popup.style.display = 'flex';
         }
 
         function closeLayers() {
