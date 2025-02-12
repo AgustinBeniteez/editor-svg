@@ -24,9 +24,9 @@
     <link rel="icon" type="image/webp" href="src/logo.webp">
     <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css' rel='stylesheet'/>
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            margin: 0; 
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
             min-height: 100vh;
             background: #1a1a1a;
             color: #ffffff;
@@ -164,6 +164,7 @@
             text-align: center;
             cursor: pointer;
             transition: background 0.2s;
+            height: 60px;
         }
 
         .size-option:hover {
@@ -172,14 +173,26 @@
 
         .size-option.selected {
             background: #4CAF50;
+            border: 2px solid #ffffff;
+        }
+
+        .size-option i {
+            display: block;
+            font-size: 1.5em;
+            margin-bottom: 5px;
         }
 
         .custom-size {
             display: flex;
             gap: 10px;
             align-items: center;
-            margin-top: 20px;
             justify-content: center;
+            margin-top: 20px;
+        }
+
+        .custom-size button {
+            min-width: auto;
+            white-space: nowrap;
         }
 
         .custom-size input {
@@ -255,6 +268,20 @@
                     <span>x</span>
                     <input type="number" id="customHeight" placeholder="Alto">
                     <span>px</span>
+                    <button onclick="toggleOrientation()" style="
+                        background: #404040;
+                        border: none;
+                        color: white;
+                        padding: 8px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 5px;
+                    ">
+                        <i class="fa-solid fa-rotate"></i>
+                        Rotar
+                    </button>
                 </div>
                 <div class="popup-buttons">
                     <button onclick="startEditor()">Comenzar</button>
@@ -287,12 +314,40 @@
             
             title.textContent = mode === 'diagram' ? 'Selecciona el tamaño del diagrama' : 'Selecciona el formato';
             
-            options.innerHTML = sizes[mode].map(size => `
-                <div class="size-option" onclick="selectSize(${size.width}, ${size.height}, this)">
-                    ${size.name}<br>
-                    <small>${size.width} x ${size.height}</small>
-                </div>
-            `).join('');
+            if (mode === 'resume') {
+                options.innerHTML = `
+                    <div class="size-options" style="
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                        gap: 10px;
+                        margin-bottom: 15px;
+                    ">
+                        <div class="size-option" onclick="setSize('A4')" style="background: #404040;">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            A4<br>
+                            <small>794 x 1123</small>
+                        </div>
+                        <div class="size-option" onclick="setSize('Carta')" style="background: #404040;">
+                            <i class="fa-solid fa-file-lines"></i>
+                            Carta<br>
+                            <small>816 x 1056</small>
+                        </div>
+                        <div class="size-option" onclick="setSize('Legal')" style="background: #404040;">
+                            <i class="fa-solid fa-file-contract"></i>
+                            Legal<br>
+                            <small>816 x 1344</small>
+                        </div>
+                    </div>
+                `;
+            } else {
+                options.innerHTML = sizes[mode].map(size => `
+                    <div class="size-option" onclick="selectSize(${size.width}, ${size.height}, this)">
+                        <i class="fa-solid fa-diagram-project"></i>
+                        ${size.name}<br>
+                        <small>${size.width} x ${size.height}</small>
+                    </div>
+                `).join('');
+            }
             
             popup.style.display = 'flex';
         }
@@ -310,8 +365,13 @@
             document.getElementById('customHeight').value = height;
             
             const options = document.querySelectorAll('.size-option');
-            options.forEach(opt => opt.classList.remove('selected'));
+            options.forEach(opt => {
+                opt.classList.remove('selected');
+                opt.style.background = '#404040';
+            });
+            
             element.classList.add('selected');
+            element.style.background = '#4CAF50';
         }
 
         function startEditor() {
@@ -325,6 +385,66 @@
 
             // Redirigir al editor con los parámetros
             window.location.href = `editor.html?width=${width}&height=${height}&mode=${currentMode}`;
+        }
+
+        function setSize(format) {
+            let width, height;
+            switch(format) {
+                case 'A4':
+                    width = 794;  // A4 en px a 96dpi
+                    height = 1123;
+                    break;
+                case 'Carta':
+                    width = 816;  // Carta en px a 96dpi
+                    height = 1056;
+                    break;
+                case 'Legal':
+                    width = 816;  // Legal en px a 96dpi
+                    height = 1344;
+                    break;
+            }
+            
+            document.getElementById('customWidth').value = width;
+            document.getElementById('customHeight').value = height;
+            
+            // Quitar selección previa si existe
+            const selected = document.querySelector('.size-option.selected');
+            if (selected) selected.classList.remove('selected');
+        }
+
+        function toggleOrientation() {
+            const widthInput = document.getElementById('customWidth');
+            const heightInput = document.getElementById('customHeight');
+            const tempWidth = widthInput.value;
+            widthInput.value = heightInput.value;
+            heightInput.value = tempWidth;
+        }
+
+        function showLayers() {
+            const popup = document.getElementById('layersPopup');
+            const list = document.getElementById('layersList');
+            const objects = canvas.getObjects();
+            
+            list.innerHTML = objects.map((obj, index) => `
+                <div class="layer-item">
+                    <span>${obj.type}</span>
+                    <button onclick="deleteLayer(${index})" style="margin-left: 10px;">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+            
+            popup.style.display = 'flex';
+        }
+
+        function deleteLayer(index) {
+            const objects = canvas.getObjects();
+            if (index >= 0 && index < objects.length) {
+                canvas.remove(objects[index]);
+                canvas.renderAll();
+                showLayers(); // Actualizar la lista de capas
+                saveState(); // Guardar el estado después de eliminar
+            }
         }
     </script>
 </body>

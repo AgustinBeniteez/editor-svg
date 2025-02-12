@@ -242,6 +242,57 @@
             min-width: 40px;
             text-align: right;
         }
+
+        .shape-size-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #2d2d2d;
+            padding: 20px;
+            border-radius: 8px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .shape-size-popup .dimensions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .shape-size-popup input {
+            width: 80px;
+            padding: 8px;
+            background: #363636;
+            border: 1px solid #505050;
+            border-radius: 4px;
+            color: white;
+        }
+
+        .shape-size-popup .buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .shape-size-popup button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .shape-size-popup button.confirm {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .shape-size-popup button.cancel {
+            background: #666666;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -391,9 +442,54 @@
         <div class="popup">
             <p>Cambiar Resolución</p>
             <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;">
-                <input type="number" id="canvasWidth" value="1579" style="width: 80px;">
+                <input type="number" id="canvasWidth" value="${canvas.width}" style="width: 80px;">
                 <span style="color: white; align-self: center;">x</span>
-                <input type="number" id="canvasHeight" value="869" style="width: 80px;">
+                <input type="number" id="canvasHeight" value="${canvas.height}" style="width: 80px;">
+                <button onclick="toggleOrientation()" style="
+                    background: #404040;
+                    border: none;
+                    color: white;
+                    padding: 8px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                ">
+                    <i class="fa-solid fa-rotate"></i>
+                    Rotar
+                </button>
+            </div>
+            <div class="size-options" style="
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 10px;
+                margin-bottom: 15px;
+            ">
+                <button onclick="setSize('A4')" style="
+                    background: #404040;
+                    border: none;
+                    color: white;
+                    padding: 8px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                ">A4</button>
+                <button onclick="setSize('Carta')" style="
+                    background: #404040;
+                    border: none;
+                    color: white;
+                    padding: 8px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                ">Carta</button>
+                <button onclick="setSize('Legal')" style="
+                    background: #404040;
+                    border: none;
+                    color: white;
+                    padding: 8px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                ">Legal</button>
             </div>
             <div class="popup-buttons">
                 <button onclick="applyResolution()">Aplicar</button>
@@ -465,6 +561,23 @@
             <div class="popup-buttons">
                 <button onclick="closeImagePopup()" style="background: #666666;">Cancelar</button>
             </div>
+        </div>
+    </div>
+
+    <div class="shape-size-popup" id="shapeSizePopup">
+        <div class="dimensions">
+            <label>
+                Ancho:
+                <input type="number" id="shapeWidth" min="1">
+            </label>
+            <label>
+                Alto:
+                <input type="number" id="shapeHeight" min="1">
+            </label>
+        </div>
+        <div class="buttons">
+            <button class="confirm" onclick="applyShapeSize()">Aplicar</button>
+            <button class="cancel" onclick="closeShapeSizePopup()">Cancelar</button>
         </div>
     </div>
 
@@ -577,24 +690,27 @@
                 radius: width / 2,
                 fill: document.getElementById('objectColor').value,
                 stroke: document.getElementById('strokeColor').value,
-                strokeWidth: 0,
+                strokeWidth: parseInt(document.getElementById('strokeWidth').value),
                 opacity: parseInt(document.getElementById('fillOpacity').value) / 100,
                 strokeOpacity: parseInt(document.getElementById('strokeOpacity').value) / 100
             });
             canvas.add(circle);
             canvas.setActiveObject(circle);
+            // Actualizar los controles inmediatamente
+            updateControls({selected: [circle]});
         }
 
         function addSquare() {
             const width = parseInt(document.getElementById('shapeWidth').value);
+            const height = parseInt(document.getElementById('shapeHeight').value);
             const square = new fabric.Rect({
                 left: 100,
                 top: 100,
                 width: width,
-                height: width,
+                height: height,
                 fill: document.getElementById('objectColor').value,
                 stroke: document.getElementById('strokeColor').value,
-                strokeWidth: 0,
+                strokeWidth: parseInt(document.getElementById('strokeWidth').value),
                 rx: parseInt(document.getElementById('borderRadius').value),
                 ry: parseInt(document.getElementById('borderRadius').value),
                 opacity: parseInt(document.getElementById('fillOpacity').value) / 100,
@@ -602,6 +718,8 @@
             });
             canvas.add(square);
             canvas.setActiveObject(square);
+            // Actualizar los controles inmediatamente
+            updateControls({selected: [square]});
         }
 
         function showConfirmPopup(message, changeCallback, type = 'change', color = null) {
@@ -908,12 +1026,15 @@
                     stroke: document.getElementById('strokeColor').value,
                     strokeWidth: parseInt(document.getElementById('strokeWidth').value),
                     rx: parseInt(document.getElementById('borderRadius').value),
-                    ry: parseInt(document.getElementById('borderRadius').value)
+                    ry: parseInt(document.getElementById('borderRadius').value),
+                    opacity: parseInt(document.getElementById('fillOpacity').value) / 100,
+                    strokeOpacity: parseInt(document.getElementById('strokeOpacity').value) / 100
                 });
             }
             canvas.renderAll();
         }
 
+        // Modificar el evento de escalado para actualizar los inputs en tiempo real
         canvas.on('object:scaling', function(e) {
             const obj = e.target;
             if (!obj) return;
@@ -925,16 +1046,13 @@
                 const diameter = Math.round(obj.radius * 2 * obj.scaleX);
                 document.getElementById('shapeWidth').value = diameter;
                 document.getElementById('shapeHeight').value = diameter;
+            } else if (obj instanceof fabric.Image) {
+                document.getElementById('shapeWidth').value = Math.round(obj.width * obj.scaleX);
+                document.getElementById('shapeHeight').value = Math.round(obj.height * obj.scaleY);
             }
-
-            obj.set({
-                stroke: document.getElementById('strokeColor').value,
-                strokeWidth: parseInt(document.getElementById('strokeWidth').value),
-                rx: obj instanceof fabric.Rect ? parseInt(document.getElementById('borderRadius').value) : 0,
-                ry: obj instanceof fabric.Rect ? parseInt(document.getElementById('borderRadius').value) : 0
-            });
         });
 
+        // Modificar el evento de modificación para actualizar los valores finales
         canvas.on('object:modified', function(e) {
             const obj = e.target;
             if (!obj) return;
@@ -953,22 +1071,21 @@
                 });
             } else if (obj instanceof fabric.Circle) {
                 const newRadius = Math.round(obj.radius * obj.scaleX);
-                document.getElementById('shapeWidth').value = newRadius * 2;
-                document.getElementById('shapeHeight').value = newRadius * 2;
+                const diameter = newRadius * 2;
+                document.getElementById('shapeWidth').value = diameter;
+                document.getElementById('shapeHeight').value = diameter;
                 
                 obj.set({
                     radius: newRadius,
                     scaleX: 1,
                     scaleY: 1
                 });
+            } else if (obj instanceof fabric.Image) {
+                const newWidth = Math.round(obj.width * obj.scaleX);
+                const newHeight = Math.round(obj.height * obj.scaleY);
+                document.getElementById('shapeWidth').value = newWidth;
+                document.getElementById('shapeHeight').value = newHeight;
             }
-
-            obj.set({
-                stroke: document.getElementById('strokeColor').value,
-                strokeWidth: parseInt(document.getElementById('strokeWidth').value),
-                rx: obj instanceof fabric.Rect ? parseInt(document.getElementById('borderRadius').value) : 0,
-                ry: obj instanceof fabric.Rect ? parseInt(document.getElementById('borderRadius').value) : 0
-            });
 
             canvas.renderAll();
             saveState();
@@ -1094,6 +1211,19 @@
             // Ocultar siempre el selector de fuente por defecto
             document.querySelector('label:has(#fontFamily)').style.display = 'none';
 
+            // Mostrar y actualizar dimensiones para formas
+            if (obj instanceof fabric.Rect) {
+                document.querySelector('label:has(#shapeWidth)').style.display = 'flex';
+                document.getElementById('shapeWidth').value = Math.round(obj.width * obj.scaleX);
+                document.getElementById('shapeHeight').value = Math.round(obj.height * obj.scaleY);
+            } 
+            else if (obj instanceof fabric.Circle) {
+                document.querySelector('label:has(#shapeWidth)').style.display = 'flex';
+                const diameter = Math.round(obj.radius * 2 * obj.scaleX);
+                document.getElementById('shapeWidth').value = diameter;
+                document.getElementById('shapeHeight').value = diameter;
+            }
+
             // Mostrar controles según el tipo de objeto
             if (obj instanceof fabric.Image) {
                 // Para imágenes, mostrar solo borde, radio, dimensiones y opacidad
@@ -1160,18 +1290,128 @@
         }
 
         function showResolutionPopup() {
-            document.getElementById('resolutionPopup').style.display = 'flex';
+            const popup = document.getElementById('resolutionPopup');
+            popup.querySelector('.popup').innerHTML = `
+                <p>Cambiar Resolución</p>
+                <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;">
+                    <input type="number" id="canvasWidth" value="${canvas.width}" style="width: 80px;">
+                    <span style="color: white; align-self: center;">x</span>
+                    <input type="number" id="canvasHeight" value="${canvas.height}" style="width: 80px;">
+                    <button onclick="toggleOrientation()" style="
+                        background: #404040;
+                        border: none;
+                        color: white;
+                        padding: 8px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 5px;
+                    ">
+                        <i class="fa-solid fa-rotate"></i>
+                        Rotar
+                    </button>
+                </div>
+                <div class="size-options" style="
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                    gap: 10px;
+                    margin-bottom: 15px;
+                ">
+                    <button onclick="setSize('A4')" style="
+                        background: #404040;
+                        border: none;
+                        color: white;
+                        padding: 8px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                    ">A4</button>
+                    <button onclick="setSize('Carta')" style="
+                        background: #404040;
+                        border: none;
+                        color: white;
+                        padding: 8px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                    ">Carta</button>
+                    <button onclick="setSize('Legal')" style="
+                        background: #404040;
+                        border: none;
+                        color: white;
+                        padding: 8px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                    ">Legal</button>
+                </div>
+                <div class="popup-buttons">
+                    <button onclick="applyResolution()">Aplicar</button>
+                    <button onclick="closeResolutionPopup()">Cancelar</button>
+                </div>
+            `;
+            popup.style.display = 'flex';
         }
 
         function closeResolutionPopup() {
             document.getElementById('resolutionPopup').style.display = 'none';
         }
 
+        function toggleOrientation() {
+            const widthInput = document.getElementById('canvasWidth');
+            const heightInput = document.getElementById('canvasHeight');
+            const tempWidth = widthInput.value;
+            widthInput.value = heightInput.value;
+            heightInput.value = tempWidth;
+        }
+
+        function setSize(format) {
+            const widthInput = document.getElementById('canvasWidth');
+            const heightInput = document.getElementById('canvasHeight');
+            
+            let width, height;
+            switch(format) {
+                case 'A4':
+                    width = 794;  // A4 en px a 96dpi
+                    height = 1123;
+                    break;
+                case 'Carta':
+                    width = 816;  // Carta en px a 96dpi
+                    height = 1056;
+                    break;
+                case 'Legal':
+                    width = 816;  // Legal en px a 96dpi
+                    height = 1344;
+                    break;
+            }
+            
+            widthInput.value = width;
+            heightInput.value = height;
+        }
+
         function applyResolution() {
             const width = parseInt(document.getElementById('canvasWidth').value);
             const height = parseInt(document.getElementById('canvasHeight').value);
+            
+            // Guardar el centro actual del canvas
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            
             canvas.setWidth(width);
             canvas.setHeight(height);
+            
+            // Calcular el nuevo centro
+            const newCenterX = width / 2;
+            const newCenterY = height / 2;
+            
+            // Ajustar la posición de todos los objetos
+            canvas.forEachObject(function(obj) {
+                const objLeft = obj.left - centerX;
+                const objTop = obj.top - centerY;
+                obj.set({
+                    left: newCenterX + objLeft,
+                    top: newCenterY + objTop
+                });
+            });
+            
             canvas.renderAll();
             closeResolutionPopup();
             saveState();
@@ -1563,6 +1803,108 @@
 
             // Redirigir al editor con los parámetros
             window.location.href = `editor.html?width=${width}&height=${height}&mode=${currentMode}`;
+        }
+
+        let selectedShape = null;
+
+        function showShapeSizePopup(shape) {
+            selectedShape = shape;
+            const popup = document.getElementById('shapeSizePopup');
+            const widthInput = document.getElementById('shapeWidth');
+            const heightInput = document.getElementById('shapeHeight');
+
+            // Obtener dimensiones actuales de la forma
+            widthInput.value = shape.getAttribute('width') || shape.getAttribute('rx') * 2;
+            heightInput.value = shape.getAttribute('height') || shape.getAttribute('ry') * 2;
+
+            popup.style.display = 'block';
+        }
+
+        function closeShapeSizePopup() {
+            document.getElementById('shapeSizePopup').style.display = 'none';
+            selectedShape = null;
+        }
+
+        function applyShapeSize() {
+            if (!selectedShape) return;
+
+            const width = document.getElementById('shapeWidth').value;
+            const height = document.getElementById('shapeHeight').value;
+
+            if (selectedShape.tagName === 'rect') {
+                selectedShape.setAttribute('width', width);
+                selectedShape.setAttribute('height', height);
+            } else if (selectedShape.tagName === 'ellipse') {
+                selectedShape.setAttribute('rx', width / 2);
+                selectedShape.setAttribute('ry', height / 2);
+            }
+
+            closeShapeSizePopup();
+        }
+
+        // Modificar el evento de selección de forma existente para mostrar el popup
+        function onShapeSelect(shape) {
+            // ... código existente de selección ...
+            showShapeSizePopup(shape);
+        }
+
+        // Agregar event listeners para los inputs de dimensiones
+        document.getElementById('shapeWidth').addEventListener('change', updateSelectedObjectSize);
+        document.getElementById('shapeHeight').addEventListener('change', updateSelectedObjectSize);
+
+        function updateSelectedObjectSize() {
+            const activeObj = canvas.getActiveObject();
+            if (!activeObj) return;
+
+            const newWidth = parseInt(document.getElementById('shapeWidth').value);
+            const newHeight = parseInt(document.getElementById('shapeHeight').value);
+
+            if (activeObj instanceof fabric.Image) {
+                // Calcular las nuevas escalas
+                const scaleX = newWidth / activeObj.width;
+                const scaleY = newHeight / activeObj.height;
+                
+                showConfirmPopup(
+                    '¿Deseas cambiar las dimensiones de la imagen?',
+                    () => {
+                        activeObj.set({
+                            scaleX: scaleX,
+                            scaleY: scaleY
+                        });
+                        canvas.renderAll();
+                        saveState();
+                    }
+                );
+            } else if (activeObj instanceof fabric.Rect) {
+                showConfirmPopup(
+                    '¿Deseas cambiar las dimensiones del rectángulo?',
+                    () => {
+                        activeObj.set({
+                            width: newWidth,
+                            height: newHeight,
+                            scaleX: 1,
+                            scaleY: 1
+                        });
+                        canvas.renderAll();
+                        saveState();
+                    }
+                );
+            } else if (activeObj instanceof fabric.Circle) {
+                const newRadius = newWidth / 2;
+                showConfirmPopup(
+                    '¿Deseas cambiar el tamaño del círculo?',
+                    () => {
+                        activeObj.set({
+                            radius: newRadius,
+                            scaleX: 1,
+                            scaleY: 1
+                        });
+                        document.getElementById('shapeHeight').value = newWidth; // Mantener círculo proporcional
+                        canvas.renderAll();
+                        saveState();
+                    }
+                );
+            }
         }
     </script>
 </body>
