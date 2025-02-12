@@ -13,17 +13,22 @@
             min-height: 100vh;
             background: #1a1a1a;
             color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            align-items: center; 
-            padding: 40px 20px;
+            display: grid;
+            place-items: center;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 5vh auto;
         }
 
         .logo-container {
-            margin-bottom: 40px;
+            margin-bottom: 5vh;
             display: flex;
             align-items: center;
             gap: 20px;
+            justify-content: center;
         }
 
         .logo-container h1 {
@@ -41,19 +46,43 @@
             gap: 30px;
             flex-wrap: wrap;
             justify-content: center;
-            max-width: 1200px;
         }
 
         .option-card {
             background: #2d2d2d;
             border-radius: 15px;
-            padding: 30px;
+            margin: 0 15px;
             width: 300px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
             cursor: pointer;
             transition: transform 0.2s, background 0.2s;
+            overflow: hidden;
+        }
+
+        .option-card-image {
+            width: 100%;
+            height: 160px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px 15px 0 0;
+            background-color: #363636;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .option-card-image i {
+            font-size: 4em;
+            color: #4CAF50;
+            opacity: 0.3;
+        }
+
+        .option-card-content {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
         .option-card:hover {
@@ -62,9 +91,8 @@
         }
 
         .option-card i {
-            font-size: 3em;
+            font-size: 2.5em;
             color: #4CAF50;
-            margin-bottom: 10px;
         }
 
         .option-card h2 {
@@ -169,40 +197,52 @@
     </style>
 </head>
 <body>
-    <div class="logo-container">
-        <img src="src/logo.webp" alt="Logo" class="logo">
-        <h1>Editor Diagramas / Resúmenes</h1>
-            </div>
-
-    <div class="options-container">
-        <div class="option-card" onclick="showSizePopup('diagram')">
-            <i class="fa-solid fa-diagram-project"></i>
-            <h2>Diagrama</h2>
-            <p>Crea diagramas, esquemas y flujos de trabajo con un lienzo personalizable. Ideal para representar procesos y estructuras. Exporta en SVG o PNG.</p>
-    </div>
-    
-        <div class="option-card" onclick="showSizePopup('resume')">
-            <i class="fa-solid fa-file-lines"></i>
-            <h2>Resumen</h2>
-            <p>Diseña resúmenes y documentos en formatos estándar como A4, carta o legal. Perfecto para documentación y presentaciones. Exporta en PDF o PNG.</p>
+    <div class="main-container">
+        <div class="logo-container">
+            <img src="src/logo.webp" alt="Logo" class="logo">
+            <h1>Editor Diagramas / Resúmenes</h1>
         </div>
-    </div>
 
-    <div class="popup-overlay" id="sizePopup">
-        <div class="popup">
-            <h3 id="popupTitle">Selecciona el tamaño</h3>
-            <div class="size-options" id="sizeOptions">
-                <!-- Se llenará dinámicamente -->
+        <div class="options-container">
+            <div class="option-card" onclick="showSizePopup('diagram')">
+                <div class="option-card-image">
+                    <i class="fa-solid fa-diagram-project"></i>
+                </div>
+                <div class="option-card-content">
+                    <i class="fa-solid fa-diagram-project"></i>
+                    <h2>Diagrama</h2>
+                    <p>Crea diagramas, esquemas y flujos de trabajo con un lienzo personalizable. Ideal para representar procesos y estructuras. Exporta en SVG o PNG.</p>
+                </div>
             </div>
-            <div class="custom-size">
-                <input type="number" id="customWidth" placeholder="Ancho">
-                <span>x</span>
-                <input type="number" id="customHeight" placeholder="Alto">
-                <span>px</span>
+            
+            <div class="option-card" onclick="showSizePopup('resume')">
+                <div class="option-card-image">
+                    <i class="fa-solid fa-file-lines"></i>
+                </div>
+                <div class="option-card-content">
+                    <i class="fa-solid fa-file-lines"></i>
+                    <h2>Resumen</h2>
+                    <p>Diseña resúmenes y documentos en formatos estándar como A4, carta o legal. Perfecto para documentación y presentaciones. Exporta en PDF o PNG.</p>
+                </div>
             </div>
-            <div class="popup-buttons">
-                <button onclick="startEditor()">Comenzar</button>
-                <button onclick="closePopup()">Cancelar</button>
+        </div>
+
+        <div class="popup-overlay" id="sizePopup">
+            <div class="popup">
+                <h3 id="popupTitle">Selecciona el tamaño</h3>
+                <div class="size-options" id="sizeOptions">
+                    <!-- Se llenará dinámicamente -->
+                </div>
+                <div class="custom-size">
+                    <input type="number" id="customWidth" placeholder="Ancho">
+                    <span>x</span>
+                    <input type="number" id="customHeight" placeholder="Alto">
+                    <span>px</span>
+                </div>
+                <div class="popup-buttons">
+                    <button onclick="startEditor()">Comenzar</button>
+                    <button onclick="closePopup()">Cancelar</button>
+                </div>
             </div>
         </div>
     </div>
