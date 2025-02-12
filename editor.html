@@ -424,7 +424,7 @@
     <div class="popup-overlay" id="exportPopup">
         <div class="popup">
             <p>
-                <i class="fa-solid fa-file-word" style="font-size: 2em; color: #4CAF50; margin-bottom: 15px;"></i><br>
+                <i class="fa-solid fa-file" style="font-size: 2em; color: #FF0000; margin-bottom: 15px;"></i><br>
                 Exportar Proyecto
             </p>
             <div style="margin-bottom: 15px;">
@@ -736,7 +736,22 @@
 
         function showExportPopup(type) {
             currentExportType = type;
-            document.getElementById('exportPopup').style.display = 'flex';
+            const popup = document.getElementById('exportPopup');
+            const iconContainer = popup.querySelector('p i');
+            
+            // Cambiar el icono según el tipo de exportación
+            if (type === 'pdf') {
+                iconContainer.className = 'fa-solid fa-file'; // Cambiado al icono solicitado
+                iconContainer.style.color = '#FF0000';
+            } else if (type === 'svg') {
+                iconContainer.className = 'fa-regular fa-file-image';
+                iconContainer.style.color = '#4CAF50';
+            } else {
+                iconContainer.className = 'fa-solid fa-file-image';
+                iconContainer.style.color = '#4CAF50';
+            }
+            
+            popup.style.display = 'flex';
             document.getElementById('projectName').focus();
         }
 
