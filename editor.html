@@ -754,6 +754,9 @@
                 case 'font-size':
                     icon = '<i class="fa-solid fa-text-width" style="font-size: 2em; color: #4CAF50; margin-bottom: 15px;"></i>';
                     break;
+                case 'delete': // Nuevo caso para la eliminación
+                    icon = '<i class="fa-solid fa-trash" style="font-size: 2em; color: #f44336; margin-bottom: 15px;"></i>';
+                    break;
             }
             
             messageEl.innerHTML = `
@@ -1539,32 +1542,21 @@
             }
         }
 
-        function deleteLayerObject(index) {
-            const popup = document.getElementById('confirmPopup');
-            popup.style.zIndex = '1001'; // Para que aparezca sobre el popup de capas
-
-            // Modificar el contenido del popup
-            document.getElementById('popupMessage').innerHTML = `
-                <i class="fa-solid fa-trash" style="font-size: 2em; color: #f44336; margin-bottom: 15px;"></i><br>
-                ¿Estás seguro de que deseas eliminar este elemento?
-            `;
-
-            // Modificar los botones
-            const buttons = popup.querySelector('.popup-buttons');
-            buttons.innerHTML = `
-                <button onclick="confirmChange(true)" style="background: #f44336;">Delete</button>
-                <button onclick="confirmChange(false)" style="background: #666666;">Cancelar</button>
-            `;
-
-            popup.style.display = 'flex';
-            pendingChange = () => {
-                const objects = canvas.getObjects();
-                canvas.remove(objects[index]);
-                canvas.renderAll();
-                showLayers(); // Actualizar la lista
-                saveState();
-                popup.style.zIndex = '1000'; // Restaurar el z-index original
-            };
+        function deleteLayer(index) {
+            const objects = canvas.getObjects();
+            if (index >= 0 && index < objects.length) {
+                // Mostrar un popup de confirmación antes de eliminar
+                showConfirmPopup(
+                    '¿Estás seguro de que deseas eliminar esta capa?',
+                    () => {
+                        canvas.remove(objects[index]);
+                        canvas.renderAll();
+                        showLayers(); // Actualizar la lista de capas
+                        saveState(); // Guardar el estado después de eliminar
+                    },
+                    'delete' // Pasar el tipo 'delete' para mostrar el ícono de papelera
+                );
+            }
         }
 
         function changeOpacity(type) {
